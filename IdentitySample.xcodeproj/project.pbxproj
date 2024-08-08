@@ -16,6 +16,7 @@
 		847A47E4136A2B93000EE7AC /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847A47E3136A2B93000EE7AC /* CoreServices.framework */; };
 		847A47F1136A3382000EE7AC /* Group.png in Resources */ = {isa = PBXBuildFile; fileRef = 847A47EB136A32F2000EE7AC /* Group.png */; };
 		847A47F4136A3382000EE7AC /* User.png in Resources */ = {isa = PBXBuildFile; fileRef = 847A47EE136A32F2000EE7AC /* User.png */; };
+		DA82E4CF2C6522B900BDF75C /* IUIdentityQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,8 @@
 		847A47E3136A2B93000EE7AC /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		847A47EB136A32F2000EE7AC /* Group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Group.png; sourceTree = "<group>"; };
 		847A47EE136A32F2000EE7AC /* User.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = User.png; sourceTree = "<group>"; };
+		DA82E4CD2C6522B900BDF75C /* IUIdentityQuery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUIdentityQuery.h; sourceTree = "<group>"; };
+		DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IUIdentityQuery.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +96,7 @@
 		847A47B5136A28E5000EE7AC /* IdentitySample */ = {
 			isa = PBXGroup;
 			children = (
+				DA82E4CC2C651D3600BDF75C /* IdentityUtilities */,
 				847A47DE136A2B75000EE7AC /* IdentityController.h */,
 				847A47DF136A2B75000EE7AC /* IdentityController.m */,
 				847A47C4136A28E5000EE7AC /* MainMenu.xib */,
@@ -120,6 +124,15 @@
 			);
 			name = Images;
 			path = IdentitySample/Images;
+			sourceTree = "<group>";
+		};
+		DA82E4CC2C651D3600BDF75C /* IdentityUtilities */ = {
+			isa = PBXGroup;
+			children = (
+				DA82E4CD2C6522B900BDF75C /* IUIdentityQuery.h */,
+				DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */,
+			);
+			path = IdentityUtilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -189,6 +202,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				847A47BD136A28E5000EE7AC /* main.m in Sources */,
+				DA82E4CF2C6522B900BDF75C /* IUIdentityQuery.m in Sources */,
 				847A47E0136A2B75000EE7AC /* IdentityController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
