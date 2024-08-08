@@ -48,17 +48,33 @@
 #import "IdentityController.h"
 #import <CoreServices/CoreServices.h>
 
+@interface IdentityController ()
+
+@property(strong) NSMutableArray *aliases;
+
+@end
+
 @implementation IdentityController
 
-- (void)setAliases:(NSArray *)aliases
+@synthesize aliases;
+
+- (NSMutableArray *)aliases
 {
-    if (_aliases != aliases)
+    if (aliases == nil)
     {
-        _aliases = aliases ? [aliases mutableCopy] : [[NSMutableArray alloc] init];
+        aliases = [NSMutableArray array];
+    }
+    return aliases;
+}
+
+- (void)setAliases:(NSArray *)anAliases
+{
+    if (aliases != anAliases)
+    {
+        aliases = anAliases ? [anAliases mutableCopy] : [NSMutableArray array];
         [_aliasesTableView reloadData];
     }
 }
-
 
 - (void)setImageWithData:(NSData*)data type:(NSString *)type url:(NSURL *)url
 {
@@ -300,7 +316,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         {
             wasChanged = YES;
         }
-        else if (!((!aliases && [_aliases count] == 0) || (aliases && [aliases isEqual:_aliases])))
+        else if (!((!aliases && [self.aliases count] == 0) || (aliases && [aliases isEqual:self.aliases])))
         {
             wasChanged = YES;
         }
@@ -348,7 +364,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 - (void)endAliasEditing
 {
     [_aliasesTableView deselectAll:self];
-    [_aliasesTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:[_aliases count] - 1] byExtendingSelection:NO];
+    [_aliasesTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:self.aliases.count - 1] byExtendingSelection:NO];
     [self updateApplyAndRevert];
 }
 
@@ -391,7 +407,6 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 {
     _identities = nil;
     _identityQuery = NULL;
-    _aliases = [[NSMutableArray alloc] init];
     _userImage = [NSImage imageNamed:@"User"];
     _groupImage = [NSImage imageNamed:@"Group"];
     _queryStartTimer = NULL;
@@ -592,8 +607,8 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (IBAction)addAlias:(id)sender
 {
-    NSUInteger lastRow = [_aliases count];
-    [_aliases addObject:@""];
+    NSUInteger lastRow = self.aliases.count;
+    [self.aliases addObject:@""];
     [_aliasesTableView reloadData];
     [_mainWindow makeFirstResponder:_aliasesTableView];
     [_aliasesTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:lastRow] byExtendingSelection:NO];
@@ -604,7 +619,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 {
     NSIndexSet *selected = [_aliasesTableView selectedRowIndexes];
     NSUInteger lastRow = [selected lastIndex];
-    [_aliases removeObjectsAtIndexes:selected];
+    [self.aliases removeObjectsAtIndexes:selected];
     [_aliasesTableView reloadData];
     [_aliasesTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:lastRow - 1] byExtendingSelection:NO];
     [self updateApplyAndRevert];
@@ -652,7 +667,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         }
         CSIdentitySetEmailAddress(identity, CFStringGetLength(emailAddress) ? emailAddress : NULL);
         CSIdentitySetImageURL(identity, imageURL);
-        [self setAliases:_aliases forIdentity:identity];
+        [self setAliases:self.aliases forIdentity:identity];
 
         /* Don't allow us to disable the currently logged-in user */
         if (getuid() == CSIdentityGetPosixID(identity) && isEnabled == NO)
@@ -695,7 +710,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     }
     else if (tv == _aliasesTableView)
     {
-        count = [_aliases count];
+        count = self.aliases.count;
     }
 
     return count;
@@ -727,7 +742,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     }
     else if (tv == _aliasesTableView)
     {
-        value = [_aliases objectAtIndex:row];
+        value = [self.aliases objectAtIndex:row];
     }
 
     return value;
@@ -735,7 +750,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (void)removeAliases:(NSIndexSet *)set
 {
-    [_aliases removeObjectsAtIndexes:set];
+    [self.aliases removeObjectsAtIndexes:set];
     [_aliasesTableView reloadData];
 }
 
@@ -746,7 +761,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     {
         if ([object length])
         {
-            [_aliases replaceObjectAtIndex:row withObject:object];
+            [self.aliases replaceObjectAtIndex:row withObject:object];
         }
         else
         {
