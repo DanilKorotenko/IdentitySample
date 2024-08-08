@@ -101,11 +101,11 @@
     return aliases;
 }
 
-- (void)setAliases:(NSArray *)anAliases
+- (void)setAliases:(NSMutableArray *)anAliases
 {
     if (aliases != anAliases)
     {
-        aliases = anAliases ? [anAliases mutableCopy] : [NSMutableArray array];
+        aliases = anAliases ? anAliases : [NSMutableArray array];
         [self.aliasesTableView reloadData];
     }
 }
@@ -181,7 +181,7 @@
         self.uuid.stringValue = uuidString ? uuidString : @"";
         self.isEnabled.state = isEnabled;
         self.posixID.intValue = posixID;
-        [self setAliases:aliases];
+        [self setAliases:[aliases mutableCopy]];
         [self setImageWithData:imageData type:imageDataType url:imageURL];
 
         /* Enable the Add Alias button and disable the Remove Alias button */
@@ -530,10 +530,8 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     [[NSApplication sharedApplication] endSheet:self.addIdentityWindow returnCode:NSModalResponseCancel];
 }
 
-- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+- (void)addIdentitySheetDidEnd:(NSModalResponse)returnCode
 {
-    [sheet orderOut:self];
-
     if (returnCode == NSModalResponseOK)
     {
         NSString *fullName = self.addIdentityFullName.stringValue;
@@ -577,12 +575,14 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     self.addIdentityPosixNameLabel.textColor = [NSColor lightGrayColor];
     self.addIdentityPosixName.enabled = NO;
 
-    /* Display a sheet that allows you to add a new user or group identity to the system */
-    [[NSApplication sharedApplication] beginSheet:self.addIdentityWindow modalForWindow:[sender window]
-        modalDelegate:self didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void * _Null_unspecified)(self)];
+    [self.mainWindow beginSheet:self.addIdentityWindow completionHandler:
+        ^(NSModalResponse returnCode)
+        {
+            [self addIdentitySheetDidEnd:returnCode];
+        }];
 }
 
-- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)info
+- (void)alertDidEnd:(NSModalResponse)returnCode
 {
     if (returnCode == NSAlertFirstButtonReturn)
     {
@@ -634,8 +634,11 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete the identity \"%@\"?",
         currentFullName]];
     [alert setInformativeText:@"You better be sure because this can't be undone."];
-    [alert beginSheetModalForWindow:self.mainWindow modalDelegate:self
-        didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void * _Nullable)(self)];
+    [alert beginSheetModalForWindow:self.mainWindow completionHandler:
+        ^(NSModalResponse returnCode)
+        {
+            [self alertDidEnd:returnCode];
+        }];
 }
 
 - (IBAction)addAlias:(id)sender
@@ -806,9 +809,8 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     [self.aliasesTableView deselectAll:self];
 }
 
-- (void)confirmPanelWillClose:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)confirmPanelDidClose:(NSModalResponse)returnCode selectedRow:(NSInteger)selectedRow
 {
-    NSInteger selectedRow = (NSInteger)contextInfo;
     if (returnCode == NSAlertFirstButtonReturn)
     {
         [self apply:self];
@@ -836,8 +838,11 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
             [alert addButtonWithTitle:@"Don't Apply"];
             [alert setMessageText:[NSString stringWithFormat:@"Apple changes to identity \"%@\"?", currentFullName]];
             [alert setInformativeText:@"Click Apply if you'd like to save the changes for this identity."];
-            [alert beginSheetModalForWindow:self.mainWindow modalDelegate:self
-                didEndSelector:@selector(confirmPanelWillClose:returnCode:contextInfo:) contextInfo:(void *)row];
+            [alert beginSheetModalForWindow:self.mainWindow completionHandler:
+                ^(NSModalResponse returnCode)
+                {
+                    [self confirmPanelDidClose:returnCode selectedRow:row];
+                }];
             shouldSelect = NO;
         }
     }
