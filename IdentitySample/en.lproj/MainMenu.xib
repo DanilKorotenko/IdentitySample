@@ -599,38 +599,38 @@
                     </menu>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="-1877" y="101"/>
         </menu>
         <customObject id="246" userLabel="IdentityController" customClass="IdentityController">
             <connections>
-                <outlet property="_addIdentityFullName" destination="393" id="402"/>
-                <outlet property="_addIdentityPassword" destination="394" id="406"/>
-                <outlet property="_addIdentityPasswordLabel" destination="396" id="410"/>
-                <outlet property="_addIdentityPosixName" destination="400" id="403"/>
-                <outlet property="_addIdentityPosixNameLabel" destination="401" id="409"/>
-                <outlet property="_addIdentityVerify" destination="397" id="407"/>
-                <outlet property="_addIdentityVerifyLabel" destination="398" id="408"/>
-                <outlet property="_addIdentityWindow" destination="279" id="299"/>
-                <outlet property="_aliasesTableView" destination="235" id="253"/>
-                <outlet property="_applyNowButton" destination="238" id="263"/>
-                <outlet property="_emailAddress" destination="220" id="251"/>
-                <outlet property="_fullName" destination="212" id="254"/>
-                <outlet property="_generatePosixNameButton" destination="399" id="405"/>
-                <outlet property="_identityTableView" destination="207" id="259"/>
-                <outlet property="_imageDataType" destination="225" id="247"/>
-                <outlet property="_imageURL" destination="223" id="248"/>
-                <outlet property="_imageView" destination="273" id="274"/>
-                <outlet property="_isEnabled" destination="289" id="295"/>
-                <outlet property="_mainWindow" destination="21" id="320"/>
-                <outlet property="_posixID" destination="218" id="249"/>
-                <outlet property="_posixName" destination="221" id="252"/>
-                <outlet property="_removeAliasButton" destination="245" id="278"/>
-                <outlet property="_removeIdentityButton" destination="211" id="276"/>
-                <outlet property="_revertButton" destination="243" id="262"/>
-                <outlet property="_searchText" destination="317" id="318"/>
-                <outlet property="_uuid" destination="213" id="269"/>
                 <outlet property="addAliasButton" destination="244" id="Vyr-09-Je8"/>
-                <outlet property="addIdentityButton" destination="210" id="whT-Eh-dTW"/>
                 <outlet property="addIdentityClassPopUp" destination="307" id="aRe-AO-tQd"/>
+                <outlet property="addIdentityFullName" destination="393" id="O84-1v-U0C"/>
+                <outlet property="addIdentityPassword" destination="394" id="AgD-WN-0V1"/>
+                <outlet property="addIdentityPasswordLabel" destination="396" id="ChA-GF-Fre"/>
+                <outlet property="addIdentityPosixName" destination="400" id="sDT-2T-rM5"/>
+                <outlet property="addIdentityPosixNameLabel" destination="401" id="bBY-4d-yp9"/>
+                <outlet property="addIdentityVerify" destination="397" id="o3C-iy-50k"/>
+                <outlet property="addIdentityVerifyLabel" destination="398" id="53k-e0-rn0"/>
+                <outlet property="addIdentityWindow" destination="279" id="ByE-X4-gwj"/>
+                <outlet property="aliasesTableView" destination="235" id="cvT-6t-wIN"/>
+                <outlet property="applyNowButton" destination="238" id="wYq-5K-d0e"/>
+                <outlet property="emailAddress" destination="220" id="JP8-ah-yN3"/>
+                <outlet property="fullName" destination="212" id="bSu-Bl-BO4"/>
+                <outlet property="generatePosixNameButton" destination="399" id="0NG-FK-Occ"/>
+                <outlet property="identityTableView" destination="207" id="D3d-cb-SNA"/>
+                <outlet property="imageDataType" destination="225" id="3VG-w1-Y3c"/>
+                <outlet property="imageURL" destination="223" id="5HZ-97-wZe"/>
+                <outlet property="imageView" destination="273" id="aj1-1A-WgK"/>
+                <outlet property="isEnabled" destination="289" id="E16-xM-MDQ"/>
+                <outlet property="mainWindow" destination="21" id="Urg-pc-jRU"/>
+                <outlet property="posixID" destination="218" id="OLL-2E-yqZ"/>
+                <outlet property="posixName" destination="221" id="Rwm-ZA-zql"/>
+                <outlet property="removeAliasButton" destination="245" id="c5F-EU-3my"/>
+                <outlet property="removeIdentityButton" destination="211" id="VIq-Be-aYR"/>
+                <outlet property="revertButton" destination="243" id="5H1-3k-lve"/>
+                <outlet property="searchText" destination="317" id="aEg-ce-9lZ"/>
+                <outlet property="uuid" destination="213" id="niR-zC-fSZ"/>
             </connections>
         </customObject>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="279" userLabel="AddIdentity">

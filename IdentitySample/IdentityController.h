@@ -49,33 +49,5 @@
 
 
 @interface IdentityController : NSObject
-{
-	IBOutlet NSWindow *_mainWindow;
-	IBOutlet NSTableView *_identityTableView;
-	IBOutlet NSTableView *_aliasesTableView;
-	IBOutlet NSSearchField *_searchText;
-	IBOutlet NSTextField *_fullName;
-	IBOutlet NSTextField *_posixName;
-	IBOutlet NSTextField *_emailAddress;
-	IBOutlet NSTextField *_uuid;
-	IBOutlet NSTextField *_posixID;
-	IBOutlet NSTextField *_imageURL;
-	IBOutlet NSTextField *_imageDataType;
-	IBOutlet NSImageView *_imageView;
-	IBOutlet NSButton *_isEnabled;
-	IBOutlet NSButton *_applyNowButton;
-	IBOutlet NSButton *_revertButton;
-	IBOutlet NSButton *_removeAliasButton;
-	IBOutlet NSButton *_removeIdentityButton;
-	IBOutlet NSButton *_generatePosixNameButton;
-	IBOutlet NSWindow *_addIdentityWindow;
-	IBOutlet NSTextField *_addIdentityFullName;
-	IBOutlet NSTextField *_addIdentityPosixName;
-	IBOutlet NSTextField *_addIdentityPasswordLabel;
-	IBOutlet NSTextField *_addIdentityVerifyLabel;
-	IBOutlet NSTextField *_addIdentityPosixNameLabel;
-	IBOutlet NSSecureTextField *_addIdentityPassword;
-	IBOutlet NSSecureTextField *_addIdentityVerify;
-}
 
 @end

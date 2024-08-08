@@ -51,9 +51,33 @@
 @interface IdentityController ()
 
 @property(strong) IBOutlet NSButton         *addAliasButton;
-@property(strong) IBOutlet NSButton         *addIdentityButton;
 @property(strong) IBOutlet NSPopUpButton    *addIdentityClassPopUp;
-
+@property(strong) IBOutlet NSTextField      *addIdentityFullName;
+@property(strong) IBOutlet NSTextField      *addIdentityPasswordLabel;
+@property(strong) IBOutlet NSSecureTextField *addIdentityPassword;
+@property(strong) IBOutlet NSTextField      *addIdentityPosixName;
+@property(strong) IBOutlet NSTextField      *addIdentityPosixNameLabel;
+@property(strong) IBOutlet NSSecureTextField *addIdentityVerify;
+@property(strong) IBOutlet NSTextField      *addIdentityVerifyLabel;
+@property(strong) IBOutlet NSWindow         *addIdentityWindow;
+@property(strong) IBOutlet NSTableView      *aliasesTableView;
+@property(strong) IBOutlet NSWindow         *mainWindow;
+@property(strong) IBOutlet NSTableView      *identityTableView;
+@property(strong) IBOutlet NSSearchField    *searchText;
+@property(strong) IBOutlet NSTextField      *fullName;
+@property(strong) IBOutlet NSTextField      *posixName;
+@property(strong) IBOutlet NSTextField      *emailAddress;
+@property(strong) IBOutlet NSTextField      *uuid;
+@property(strong) IBOutlet NSTextField      *posixID;
+@property(strong) IBOutlet NSTextField      *imageURL;
+@property(strong) IBOutlet NSTextField      *imageDataType;
+@property(strong) IBOutlet NSImageView      *imageView;
+@property(strong) IBOutlet NSButton         *isEnabled;
+@property(strong) IBOutlet NSButton         *applyNowButton;
+@property(strong) IBOutlet NSButton         *revertButton;
+@property(strong) IBOutlet NSButton         *removeAliasButton;
+@property(strong) IBOutlet NSButton         *removeIdentityButton;
+@property(strong) IBOutlet NSButton         *generatePosixNameButton;
 
 @property(strong) NSMutableArray *aliases;
 @property(strong) NSMutableArray *identities;
@@ -82,7 +106,7 @@
     if (aliases != anAliases)
     {
         aliases = anAliases ? [anAliases mutableCopy] : [NSMutableArray array];
-        [_aliasesTableView reloadData];
+        [self.aliasesTableView reloadData];
     }
 }
 
@@ -90,42 +114,42 @@
 {
     if (data)
     {
-        _imageView.image = [[NSImage alloc] initWithData:data];
+        self.imageView.image = [[NSImage alloc] initWithData:data];
     }
 
-    _imageDataType.stringValue = type ? type : @"";
+    self.imageDataType.stringValue = type ? type : @"";
 
     if (url)
     {
         NSString *imageURLString = url.relativePath;
-        _imageURL.stringValue = imageURLString ? imageURLString : @"";
+        self.imageURL.stringValue = imageURLString ? imageURLString : @"";
         if (!data)
         {
-            _imageView.image = [[NSImage alloc] initWithContentsOfURL:url];
+            self.imageView.image = [[NSImage alloc] initWithContentsOfURL:url];
         }
     }
     else
     {
-        _imageURL.stringValue = @"";
+        self.imageURL.stringValue = @"";
         if (!data)
         {
-            _imageView.image = nil;
+            self.imageView.image = nil;
         }
     }
 }
 
 - (void)setIdentityInfoEnabled:(BOOL)enabled
 {
-    _fullName.enabled = enabled;
-    _posixName.enabled = enabled;
-    _emailAddress.enabled = enabled;
-    _uuid.enabled = enabled;
-    _imageURL.enabled = enabled;
-    _imageDataType.enabled = enabled;
-    _isEnabled.enabled = enabled;
-    _posixID.enabled = enabled;
-    _aliasesTableView.enabled = enabled;
-    _imageView.enabled = enabled;
+    self.fullName.enabled = enabled;
+    self.posixName.enabled = enabled;
+    self.emailAddress.enabled = enabled;
+    self.uuid.enabled = enabled;
+    self.imageURL.enabled = enabled;
+    self.imageDataType.enabled = enabled;
+    self.isEnabled.enabled = enabled;
+    self.posixID.enabled = enabled;
+    self.aliasesTableView.enabled = enabled;
+    self.imageView.enabled = enabled;
 }
 
 - (void)reloadIdentityAtIndex:(NSInteger)currentIndex
@@ -151,18 +175,18 @@
         [self setIdentityInfoEnabled:YES];
 
         /* Update the user interface with the current info */
-        _fullName.stringValue = fullName ? fullName : @"";
-        _posixName.stringValue = posixName ? posixName : @"";
-        _emailAddress.stringValue = emailAddress ? emailAddress : @"";
-        _uuid.stringValue = uuidString ? uuidString : @"";
-        _isEnabled.state = isEnabled;
-        _posixID.intValue = posixID;
+        self.fullName.stringValue = fullName ? fullName : @"";
+        self.posixName.stringValue = posixName ? posixName : @"";
+        self.emailAddress.stringValue = emailAddress ? emailAddress : @"";
+        self.uuid.stringValue = uuidString ? uuidString : @"";
+        self.isEnabled.state = isEnabled;
+        self.posixID.intValue = posixID;
         [self setAliases:aliases];
         [self setImageWithData:imageData type:imageDataType url:imageURL];
 
         /* Enable the Add Alias button and disable the Remove Alias button */
         self.addAliasButton.enabled = YES;
-        _removeAliasButton.enabled = NO;
+        self.removeAliasButton.enabled = NO;
     }
     else
     {
@@ -170,24 +194,24 @@
         [self setIdentityInfoEnabled:NO];
 
         /* Clear all the info */
-        _uuid.stringValue = @"";
-        _posixID.stringValue = @"";
-        _imageURL.stringValue = @"";
-        _fullName.stringValue = @"";
-        _posixName.stringValue = @"";
-        _emailAddress.stringValue = @"";
-        _isEnabled.state = NO;
+        self.uuid.stringValue = @"";
+        self.posixID.stringValue = @"";
+        self.imageURL.stringValue = @"";
+        self.fullName.stringValue = @"";
+        self.posixName.stringValue = @"";
+        self.emailAddress.stringValue = @"";
+        self.isEnabled.state = NO;
         [self setAliases:nil];
         [self setImageWithData:nil type:nil url:nil];
 
         /* Disable the Add/Remove Alias buttons */
         self.addAliasButton.enabled = NO;
-        _removeAliasButton.enabled = NO;
+        self.removeAliasButton.enabled = NO;
     }
 
     /* Disable the Apply and Revert buttons */
-    _applyNowButton.enabled = NO;
-    _revertButton.enabled = NO;
+    self.applyNowButton.enabled = NO;
+    self.revertButton.enabled = NO;
 }
 
 NSComparisonResult SortByFirstName(id val1, id val2, void *context)
@@ -200,7 +224,7 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
 - (void)updateIdentities
 {
     CSIdentityRef selectedIdentity = NULL;
-    NSInteger currentIndex = [_identityTableView selectedRow];
+    NSInteger currentIndex = [self.identityTableView selectedRow];
 
     if (currentIndex != -1)
     {
@@ -212,7 +236,7 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
     NSArray *identities = (NSArray *)CFBridgingRelease(CSIdentityQueryCopyResults(self.identityQuery));
     self.identities = [identities mutableCopy];
     [self.identities sortUsingFunction:SortByFirstName context:nil];
-    [_identityTableView reloadData];
+    [self.identityTableView reloadData];
 
     if (selectedIdentity)
     {
@@ -222,14 +246,14 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
         {
             if (CFEqual(selectedIdentity, (CSIdentityRef)[self.identities objectAtIndex:index]))
             {
-                [_identityTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
+                [self.identityTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
                 break;
             }
         }
         CFRelease(selectedIdentity);
     }
 
-    [self reloadIdentityAtIndex:[_identityTableView selectedRow]];
+    [self reloadIdentityAtIndex:[self.identityTableView selectedRow]];
 }
 
 - (void)receiveEvent:(CSIdentityQueryEvent)event fromQuery:(CSIdentityQueryRef)query identities:(NSArray*)identities
@@ -271,7 +295,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (void)startNewSearchQuery:(NSTimer*)theTimer
 {
-    [self queryForIdentitiesByName:[_searchText stringValue]];
+    [self queryForIdentitiesByName:[self.searchText stringValue]];
     [self.queryStartTimer invalidate];
     self.queryStartTimer = nil;
 }
@@ -293,7 +317,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 - (BOOL)wasIdentityChanged
 {
     BOOL wasChanged = NO;
-    NSInteger currentIndex = [_identityTableView selectedRow];
+    NSInteger currentIndex = [self.identityTableView selectedRow];
 
     if (currentIndex != -1)
     {
@@ -306,11 +330,11 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         BOOL isEnabled = (BOOL)CSIdentityIsEnabled(identity);
 
         /* Fetch all the modified values for the current identity */
-        NSString *_newFullName = [_fullName stringValue];
-        NSString *_newEmailAddress = [_emailAddress stringValue];
-        NSString *imageURLString = [_imageURL stringValue];
+        NSString *_newFullName = [self.fullName stringValue];
+        NSString *_newEmailAddress = [self.emailAddress stringValue];
+        NSString *imageURLString = [self.imageURL stringValue];
         NSURL *_newImageURL = [NSURL fileURLWithPath:imageURLString];
-        BOOL _newIsEnabled = [_isEnabled state];
+        BOOL _newIsEnabled = [self.isEnabled state];
 
         /* If any of these values have changed, then return YES */
         if (![fullName isEqual:_newFullName])
@@ -343,21 +367,21 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 {
     /* If any of the current identity info has changed, enable the Apply and Revert buttons */
     BOOL modified = [self wasIdentityChanged];
-    _applyNowButton.enabled = modified;
-    _revertButton.enabled = modified;
+    self.applyNowButton.enabled = modified;
+    self.revertButton.enabled = modified;
 }
 
 - (IBAction)generatePosixNameToggled:(id)sender
 {
     if ([sender state])
     {
-        [_addIdentityPosixNameLabel setTextColor:[NSColor lightGrayColor]];
-        _addIdentityPosixName.enabled = NO;
+        [self.addIdentityPosixNameLabel setTextColor:[NSColor lightGrayColor]];
+        self.addIdentityPosixName.enabled = NO;
     }
     else
     {
-        [_addIdentityPosixNameLabel setTextColor:[NSColor blackColor]];
-        _addIdentityPosixName.enabled = YES;
+        [self.addIdentityPosixNameLabel setTextColor:[NSColor blackColor]];
+        self.addIdentityPosixName.enabled = YES;
     }
 }
 
@@ -373,8 +397,8 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (void)endAliasEditing
 {
-    [_aliasesTableView deselectAll:self];
-    [_aliasesTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:self.aliases.count - 1] byExtendingSelection:NO];
+    [self.aliasesTableView deselectAll:self];
+    [self.aliasesTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:self.aliases.count - 1] byExtendingSelection:NO];
     [self updateApplyAndRevert];
 }
 
@@ -385,15 +409,15 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (void)identityTableViewSelectionDidChange:(NSNotification *)notification
 {
-    NSInteger currentIndex = [_identityTableView selectedRow];
+    NSInteger currentIndex = [self.identityTableView selectedRow];
 
     if (currentIndex == -1)
     {
-        _removeIdentityButton.enabled = NO;
+        self.removeIdentityButton.enabled = NO;
     }
     else
     {
-        _removeIdentityButton.enabled = YES;
+        self.removeIdentityButton.enabled = YES;
     }
 
     [self reloadIdentityAtIndex:currentIndex];
@@ -401,15 +425,15 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (void)aliasesTableViewSelectionDidChange:(NSNotification *)notification
 {
-    NSInteger currentIndex = [_aliasesTableView selectedRow];
+    NSInteger currentIndex = [self.aliasesTableView selectedRow];
 
     if (currentIndex == -1)
     {
-        _removeAliasButton.enabled = NO;
+        self.removeAliasButton.enabled = NO;
     }
     else
     {
-        _removeAliasButton.enabled = YES;
+        self.removeAliasButton.enabled = YES;
     }
 }
 
@@ -421,30 +445,30 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     self.queryStartTimer = nil;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(identityTableViewSelectionDidChange:)
-        name:NSTableViewSelectionDidChangeNotification object:_identityTableView];
+        name:NSTableViewSelectionDidChangeNotification object:self.identityTableView];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(identityTableViewSelectionDidChange:)
-        name:NSTableViewSelectionIsChangingNotification object:_identityTableView];
+        name:NSTableViewSelectionIsChangingNotification object:self.identityTableView];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(aliasesTableViewSelectionDidChange:)
-        name:NSTableViewSelectionDidChangeNotification object:_aliasesTableView];
+        name:NSTableViewSelectionDidChangeNotification object:self.aliasesTableView];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(aliasEditingDidEnd:)
-        name:NSControlTextDidEndEditingNotification object:_aliasesTableView];
+        name:NSControlTextDidEndEditingNotification object:self.aliasesTableView];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(searchTextDidChange:)
-        name:NSControlTextDidChangeNotification object:_searchText];
+        name:NSControlTextDidChangeNotification object:self.searchText];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(identityDidChange:)
-        name:NSControlTextDidChangeNotification object:_fullName];
+        name:NSControlTextDidChangeNotification object:self.fullName];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(identityDidChange:)
-        name:NSControlTextDidChangeNotification object:_emailAddress];
+        name:NSControlTextDidChangeNotification object:self.emailAddress];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(identityDidChange:)
-        name:NSControlTextDidChangeNotification object:_imageURL];
+        name:NSControlTextDidChangeNotification object:self.imageURL];
 
-    [_mainWindow makeFirstResponder:_identityTableView];
+    [self.mainWindow makeFirstResponder:self.identityTableView];
 
     /* Start a new identity query and search for all identities by passing in empty string */
     [self queryForIdentitiesByName:@""];
@@ -459,42 +483,42 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 - (IBAction)classPopUpChanged:(id)sender
 {
     BOOL hide = (BOOL)[sender indexOfSelectedItem];
-    _addIdentityPassword.hidden = hide;
-    _addIdentityVerify.hidden = hide;
-    _addIdentityVerify.hidden = hide;
-    _addIdentityPasswordLabel.hidden = hide;
-    _addIdentityVerifyLabel.hidden = hide;
-    _generatePosixNameButton.hidden = hide;
-    _addIdentityPosixNameLabel.hidden = hide;
-    _addIdentityPosixName.hidden = hide;
+    self.addIdentityPassword.hidden = hide;
+    self.addIdentityVerify.hidden = hide;
+    self.addIdentityVerify.hidden = hide;
+    self.addIdentityPasswordLabel.hidden = hide;
+    self.addIdentityVerifyLabel.hidden = hide;
+    self.generatePosixNameButton.hidden = hide;
+    self.addIdentityPosixNameLabel.hidden = hide;
+    self.addIdentityPosixName.hidden = hide;
 
     if (hide)
     {
-        [_addIdentityWindow makeFirstResponder:_addIdentityFullName];
+        [self.addIdentityWindow makeFirstResponder:self.addIdentityFullName];
     }
 }
 
 - (IBAction)createIdentity:(id)sender
 {
     /* Only allow identities to be created if the Full Name is at least one character */
-    if (_addIdentityFullName.stringValue.length)
+    if (self.addIdentityFullName.stringValue.length)
     {
         CSIdentityClass class = [self.addIdentityClassPopUp indexOfSelectedItem] + 1;
         if (class == kCSIdentityClassGroup)
         {
-            [[NSApplication sharedApplication] endSheet:_addIdentityWindow returnCode:NSModalResponseOK];
+            [[NSApplication sharedApplication] endSheet:self.addIdentityWindow returnCode:NSModalResponseOK];
         }
         else if (class == kCSIdentityClassUser)
         {
             /* Only proceed if the Password and the Verify field contain the same value */
-            if ([[_addIdentityPassword stringValue] isEqual:[_addIdentityVerify stringValue]])
+            if ([[self.addIdentityPassword stringValue] isEqual:self.addIdentityVerify.stringValue])
             {
-                BOOL generatePosixName = _generatePosixNameButton.state;
+                BOOL generatePosixName = self.generatePosixNameButton.state;
 
                 /* Only proceed if Generate Posix Name is set or if Posix name is at least one character */
-                if (generatePosixName || (!generatePosixName && [[_addIdentityPosixName stringValue] length]))
+                if (generatePosixName || (!generatePosixName && self.addIdentityPosixName.stringValue.length))
                 {
-                    [[NSApplication sharedApplication] endSheet:_addIdentityWindow returnCode:NSModalResponseOK];
+                    [[NSApplication sharedApplication] endSheet:self.addIdentityWindow returnCode:NSModalResponseOK];
                 }
             }
         }
@@ -503,7 +527,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (IBAction)cancelIdentity:(id)sender
 {
-    [[NSApplication sharedApplication] endSheet:_addIdentityWindow returnCode:NSModalResponseCancel];
+    [[NSApplication sharedApplication] endSheet:self.addIdentityWindow returnCode:NSModalResponseCancel];
 }
 
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
@@ -512,14 +536,14 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
     if (returnCode == NSModalResponseOK)
     {
-        NSString *fullName = _addIdentityFullName.stringValue;
+        NSString *fullName = self.addIdentityFullName.stringValue;
 
         if ([fullName length])
         {
             CFErrorRef error;
             CSIdentityClass class = [self.addIdentityClassPopUp indexOfSelectedItem] + 1;
-            CFStringRef posixName = _generatePosixNameButton.state ?
-                kCSIdentityGeneratePosixName : (__bridge CFStringRef)[_addIdentityPosixName stringValue];
+            CFStringRef posixName = self.generatePosixNameButton.state ?
+                kCSIdentityGeneratePosixName : (__bridge CFStringRef)self.addIdentityPosixName.stringValue;
 
             /* Create a brand new identity */
             CSIdentityRef identity = CSIdentityCreate(NULL, class, (__bridge CFStringRef)fullName, posixName,
@@ -527,7 +551,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
             if (class == kCSIdentityClassUser)
             {
                 /* If this is a user identity, add a password */
-                CSIdentitySetPassword(identity, (__bridge CFStringRef)[_addIdentityPassword stringValue]);
+                CSIdentitySetPassword(identity, (__bridge CFStringRef)self.addIdentityPassword.stringValue);
             }
 
             /* Commit the new identity to the identity store */
@@ -535,26 +559,26 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
             {
                 NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [(__bridge NSError*)error userInfo] );
             }
-            [self queryForIdentitiesByName:_searchText.stringValue];
+            [self queryForIdentitiesByName:self.searchText.stringValue];
         }
     }
 
-    _addIdentityFullName.stringValue = @"";
-    _addIdentityPosixName.stringValue = @"";
-    _addIdentityPassword.stringValue = @"";
-    _addIdentityVerify.stringValue = @"";
-    _generatePosixNameButton.state = YES;
+    self.addIdentityFullName.stringValue = @"";
+    self.addIdentityPosixName.stringValue = @"";
+    self.addIdentityPassword.stringValue = @"";
+    self.addIdentityVerify.stringValue = @"";
+    self.generatePosixNameButton.state = YES;
 }
 
 - (IBAction)addIdentity:(id)sender
 {
-    [_addIdentityWindow makeFirstResponder:_addIdentityFullName];
-    _generatePosixNameButton.state = YES;
-    _addIdentityPosixNameLabel.textColor = [NSColor lightGrayColor];
-    _addIdentityPosixName.enabled = NO;
+    [self.addIdentityWindow makeFirstResponder:self.addIdentityFullName];
+    self.generatePosixNameButton.state = YES;
+    self.addIdentityPosixNameLabel.textColor = [NSColor lightGrayColor];
+    self.addIdentityPosixName.enabled = NO;
 
     /* Display a sheet that allows you to add a new user or group identity to the system */
-    [[NSApplication sharedApplication] beginSheet:_addIdentityWindow modalForWindow:[sender window]
+    [[NSApplication sharedApplication] beginSheet:self.addIdentityWindow modalForWindow:[sender window]
         modalDelegate:self didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void * _Null_unspecified)(self)];
 }
 
@@ -562,7 +586,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 {
     if (returnCode == NSAlertFirstButtonReturn)
     {
-        NSInteger currentIndex = [_identityTableView selectedRow];
+        NSInteger currentIndex = [self.identityTableView selectedRow];
 
         if (currentIndex != -1)
         {
@@ -580,10 +604,10 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
                 /* Commit the change back to the identity store */
                 if (CSIdentityCommit(identity, NULL, &error))
                 {
-                    [self queryForIdentitiesByName:[_searchText stringValue]];
+                    [self queryForIdentitiesByName:[self.searchText stringValue]];
                     NSUInteger indexToSelect = ((NSUInteger)currentIndex == count && currentIndex > 0) ?
                         (currentIndex - 1) : currentIndex;
-                    [_identityTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:indexToSelect]
+                    [self.identityTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:indexToSelect]
                         byExtendingSelection:NO];
                 }
                 else
@@ -602,7 +626,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 - (IBAction)removeIdentity:(id)sender
 {
     NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[self.identities
-        objectAtIndex:[_identityTableView selectedRow]]);
+        objectAtIndex:[self.identityTableView selectedRow]]);
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setAlertStyle:NSAlertStyleCritical];
     [alert addButtonWithTitle:@"Delete"];
@@ -610,7 +634,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete the identity \"%@\"?",
         currentFullName]];
     [alert setInformativeText:@"You better be sure because this can't be undone."];
-    [alert beginSheetModalForWindow:_mainWindow modalDelegate:self
+    [alert beginSheetModalForWindow:self.mainWindow modalDelegate:self
         didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void * _Nullable)(self)];
 }
 
@@ -618,19 +642,19 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 {
     NSUInteger lastRow = self.aliases.count;
     [self.aliases addObject:@""];
-    [_aliasesTableView reloadData];
-    [_mainWindow makeFirstResponder:_aliasesTableView];
-    [_aliasesTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:lastRow] byExtendingSelection:NO];
-    [_aliasesTableView editColumn:0 row:lastRow withEvent:nil select:YES];
+    [self.aliasesTableView reloadData];
+    [self.mainWindow makeFirstResponder:self.aliasesTableView];
+    [self.aliasesTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:lastRow] byExtendingSelection:NO];
+    [self.aliasesTableView editColumn:0 row:lastRow withEvent:nil select:YES];
 }
 
 - (IBAction)removeAlias:(id)sender
 {
-    NSIndexSet *selected = [_aliasesTableView selectedRowIndexes];
+    NSIndexSet *selected = [self.aliasesTableView selectedRowIndexes];
     NSUInteger lastRow = [selected lastIndex];
     [self.aliases removeObjectsAtIndexes:selected];
-    [_aliasesTableView reloadData];
-    [_aliasesTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:lastRow - 1] byExtendingSelection:NO];
+    [self.aliasesTableView reloadData];
+    [self.aliasesTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:lastRow - 1] byExtendingSelection:NO];
     [self updateApplyAndRevert];
 }
 
@@ -657,18 +681,18 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (IBAction)apply:(id)sender
 {
-    NSInteger currentIndex = [_identityTableView selectedRow];
+    NSInteger currentIndex = [self.identityTableView selectedRow];
 
     if (currentIndex != -1)
     {
         CFErrorRef error;
         CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
 
-        CFStringRef fullName = (__bridge CFStringRef)_fullName.stringValue;
-        CFStringRef emailAddress = (__bridge CFStringRef)_emailAddress.stringValue;
-        NSString *imageURLString = _imageURL.stringValue;
+        CFStringRef fullName = (__bridge CFStringRef)self.fullName.stringValue;
+        CFStringRef emailAddress = (__bridge CFStringRef)self.emailAddress.stringValue;
+        NSString *imageURLString = self.imageURL.stringValue;
         CFURLRef imageURL = (__bridge CFURLRef)[NSURL fileURLWithPath:imageURLString];
-        Boolean isEnabled = (Boolean)_isEnabled.state;
+        Boolean isEnabled = (Boolean)self.isEnabled.state;
 
         if (fullName)
         {
@@ -682,7 +706,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         if (getuid() == CSIdentityGetPosixID(identity) && isEnabled == NO)
         {
             NSLog(@"Disabling the currently logged-in user is a bad idea");
-            [_isEnabled setState:YES];
+            [self.isEnabled setState:YES];
         }
         else
         {
@@ -700,24 +724,24 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         }
     }
 
-    [_mainWindow makeFirstResponder:_identityTableView];
+    [self.mainWindow makeFirstResponder:self.identityTableView];
 }
 
 - (IBAction)revert:(id)sender
 {
-    [_mainWindow makeFirstResponder:_identityTableView];
-    [self reloadIdentityAtIndex:[_identityTableView selectedRow]];
+    [self.mainWindow makeFirstResponder:self.identityTableView];
+    [self reloadIdentityAtIndex:[self.identityTableView selectedRow]];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tv
 {
     NSInteger count = 0;
 
-    if (tv == _identityTableView)
+    if (tv == self.identityTableView)
     {
         count = self.identities.count;
     }
-    else if (tv == _aliasesTableView)
+    else if (tv == self.aliasesTableView)
     {
         count = self.aliases.count;
     }
@@ -729,7 +753,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 {
     id value = nil;
 
-    if (tv == _identityTableView)
+    if (tv == self.identityTableView)
     {
         CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:row];
         if ([[tableColumn identifier] isEqual:@"Icon"])
@@ -749,7 +773,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
             value = (__bridge NSString *)CSIdentityGetFullName(identity);
         }
     }
-    else if (tv == _aliasesTableView)
+    else if (tv == self.aliasesTableView)
     {
         value = [self.aliases objectAtIndex:row];
     }
@@ -760,13 +784,13 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 - (void)removeAliases:(NSIndexSet *)set
 {
     [self.aliases removeObjectsAtIndexes:set];
-    [_aliasesTableView reloadData];
+    [self.aliasesTableView reloadData];
 }
 
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn
     row:(int)row
 {
-    if (tableView == _aliasesTableView)
+    if (tableView == self.aliasesTableView)
     {
         if ([object length])
         {
@@ -779,7 +803,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         }
     }
 
-    [_aliasesTableView deselectAll:self];
+    [self.aliasesTableView deselectAll:self];
 }
 
 - (void)confirmPanelWillClose:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -792,19 +816,19 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
     if (returnCode != NSAlertSecondButtonReturn)
     {
-        [_identityTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+        [self.identityTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
     }
 }
 
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
 {
     BOOL shouldSelect = YES;
-    if (tableView == _identityTableView)
+    if (tableView == self.identityTableView)
     {
-        if ([self wasIdentityChanged] && [_identityTableView selectedRow] != row)
+        if ([self wasIdentityChanged] && [self.identityTableView selectedRow] != row)
         {
             NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[self.identities
-                objectAtIndex:[_identityTableView selectedRow]]);
+                objectAtIndex:[self.identityTableView selectedRow]]);
             NSAlert *alert = [[NSAlert alloc] init];
             [alert setAlertStyle:NSAlertStyleInformational];
             [alert addButtonWithTitle:@"Apply"];
@@ -812,7 +836,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
             [alert addButtonWithTitle:@"Don't Apply"];
             [alert setMessageText:[NSString stringWithFormat:@"Apple changes to identity \"%@\"?", currentFullName]];
             [alert setInformativeText:@"Click Apply if you'd like to save the changes for this identity."];
-            [alert beginSheetModalForWindow:_mainWindow modalDelegate:self
+            [alert beginSheetModalForWindow:self.mainWindow modalDelegate:self
                 didEndSelector:@selector(confirmPanelWillClose:returnCode:contextInfo:) contextInfo:(void *)row];
             shouldSelect = NO;
         }
