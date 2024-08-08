@@ -86,17 +86,4 @@
 	NSTimer *_queryStartTimer;
 }
 
-- (IBAction)addIdentity:(id)sender;
-- (IBAction)removeIdentity:(id)sender;
-- (IBAction)addAlias:(id)sender;
-- (IBAction)removeAlias:(id)sender;
-- (IBAction)enableToggled:(id)sender;
-- (IBAction)apply:(id)sender;
-- (IBAction)revert:(id)sender;
-
-- (IBAction)createIdentity:(id)sender;
-- (IBAction)cancelIdentity:(id)sender;
-- (IBAction)classPopUpChanged:(id)sender;
-- (IBAction)generatePosixNameToggled:(id)sender;
-
 @end
