@@ -602,9 +602,6 @@
         </menu>
         <customObject id="246" userLabel="IdentityController" customClass="IdentityController">
             <connections>
-                <outlet property="_addAliasButton" destination="244" id="277"/>
-                <outlet property="_addIdentityButton" destination="210" id="275"/>
-                <outlet property="_addIdentityClassPopUp" destination="307" id="313"/>
                 <outlet property="_addIdentityFullName" destination="393" id="402"/>
                 <outlet property="_addIdentityPassword" destination="394" id="406"/>
                 <outlet property="_addIdentityPasswordLabel" destination="396" id="410"/>
@@ -631,6 +628,9 @@
                 <outlet property="_revertButton" destination="243" id="262"/>
                 <outlet property="_searchText" destination="317" id="318"/>
                 <outlet property="_uuid" destination="213" id="269"/>
+                <outlet property="addAliasButton" destination="244" id="Vyr-09-Je8"/>
+                <outlet property="addIdentityButton" destination="210" id="whT-Eh-dTW"/>
+                <outlet property="addIdentityClassPopUp" destination="307" id="aRe-AO-tQd"/>
             </connections>
         </customObject>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="279" userLabel="AddIdentity">
@@ -781,6 +781,7 @@ Gw
                     </textField>
                 </subviews>
             </view>
+            <point key="canvasLocation" x="-1765" y="338"/>
         </window>
     </objects>
     <resources>

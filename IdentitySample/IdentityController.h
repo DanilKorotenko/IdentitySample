@@ -48,7 +48,8 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface IdentityController : NSObject {
+@interface IdentityController : NSObject
+{
 	IBOutlet NSWindow *_mainWindow;
 	IBOutlet NSTableView *_identityTableView;
 	IBOutlet NSTableView *_aliasesTableView;
@@ -64,13 +65,10 @@
 	IBOutlet NSButton *_isEnabled;
 	IBOutlet NSButton *_applyNowButton;
 	IBOutlet NSButton *_revertButton;
-	IBOutlet NSButton *_addAliasButton;
 	IBOutlet NSButton *_removeAliasButton;
-	IBOutlet NSButton *_addIdentityButton;
 	IBOutlet NSButton *_removeIdentityButton;
 	IBOutlet NSButton *_generatePosixNameButton;
 	IBOutlet NSWindow *_addIdentityWindow;
-	IBOutlet NSPopUpButton *_addIdentityClassPopUp;
 	IBOutlet NSTextField *_addIdentityFullName;
 	IBOutlet NSTextField *_addIdentityPosixName;
 	IBOutlet NSTextField *_addIdentityPasswordLabel;

@@ -50,6 +50,11 @@
 
 @interface IdentityController ()
 
+@property(strong) IBOutlet NSButton         *addAliasButton;
+@property(strong) IBOutlet NSButton         *addIdentityButton;
+@property(strong) IBOutlet NSPopUpButton    *addIdentityClassPopUp;
+
+
 @property(strong) NSMutableArray *aliases;
 @property(strong) NSMutableArray *identities;
 @property(strong) NSImage *userImage;
@@ -156,7 +161,7 @@
         [self setImageWithData:imageData type:imageDataType url:imageURL];
 
         /* Enable the Add Alias button and disable the Remove Alias button */
-        _addAliasButton.enabled = YES;
+        self.addAliasButton.enabled = YES;
         _removeAliasButton.enabled = NO;
     }
     else
@@ -176,7 +181,7 @@
         [self setImageWithData:nil type:nil url:nil];
 
         /* Disable the Add/Remove Alias buttons */
-        _addAliasButton.enabled = NO;
+        self.addAliasButton.enabled = NO;
         _removeAliasButton.enabled = NO;
     }
 
@@ -474,7 +479,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     /* Only allow identities to be created if the Full Name is at least one character */
     if (_addIdentityFullName.stringValue.length)
     {
-        CSIdentityClass class = [_addIdentityClassPopUp indexOfSelectedItem] + 1;
+        CSIdentityClass class = [self.addIdentityClassPopUp indexOfSelectedItem] + 1;
         if (class == kCSIdentityClassGroup)
         {
             [[NSApplication sharedApplication] endSheet:_addIdentityWindow returnCode:NSModalResponseOK];
@@ -512,7 +517,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         if ([fullName length])
         {
             CFErrorRef error;
-            CSIdentityClass class = [_addIdentityClassPopUp indexOfSelectedItem] + 1;
+            CSIdentityClass class = [self.addIdentityClassPopUp indexOfSelectedItem] + 1;
             CFStringRef posixName = _generatePosixNameButton.state ?
                 kCSIdentityGeneratePosixName : (__bridge CFStringRef)[_addIdentityPosixName stringValue];
 
