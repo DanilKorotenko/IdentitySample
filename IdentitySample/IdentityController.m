@@ -51,6 +51,11 @@
 @interface IdentityController ()
 
 @property(strong) NSMutableArray *aliases;
+@property(strong) NSMutableArray *identities;
+@property(strong) NSImage *userImage;
+@property(strong) NSImage *groupImage;
+@property(readwrite) CSIdentityQueryRef identityQuery;
+@property(strong) NSTimer *queryStartTimer;
 
 @end
 
@@ -123,7 +128,7 @@
     if (currentIndex != -1)
     {
         /* Fetch the CSIdentityRef corresponding to the current sidebar selection */
-        CSIdentityRef identity = (__bridge CSIdentityRef)[_identities objectAtIndex:currentIndex];
+        CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
 
         /* Fetch all the Identity information to update the user interface */
         NSString *fullName = (__bridge NSString *)CSIdentityGetFullName(identity);
@@ -195,22 +200,22 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
     if (currentIndex != -1)
     {
         /* Save away the currently selected identity in the sidebar */
-        selectedIdentity = (__bridge CSIdentityRef)[_identities objectAtIndex:currentIndex];
+        selectedIdentity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
     }
 
     /* Replace the previous identity list with the latest query results and sort it in alphabetical order */
-    NSArray *identities = (NSArray *)CFBridgingRelease(CSIdentityQueryCopyResults(_identityQuery));
-    _identities = [identities mutableCopy];
-    [_identities sortUsingFunction:SortByFirstName context:nil];
+    NSArray *identities = (NSArray *)CFBridgingRelease(CSIdentityQueryCopyResults(self.identityQuery));
+    self.identities = [identities mutableCopy];
+    [self.identities sortUsingFunction:SortByFirstName context:nil];
     [_identityTableView reloadData];
 
     if (selectedIdentity)
     {
         /* Reselect the previously selected identity */
-        NSUInteger index, count = [_identities count];
+        NSUInteger index, count = self.identities.count;
         for (index = 0; index < count; index++)
         {
-            if (CFEqual(selectedIdentity, (CSIdentityRef)[_identities objectAtIndex:index]))
+            if (CFEqual(selectedIdentity, (CSIdentityRef)[self.identities objectAtIndex:index]))
             {
                 [_identityTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
                 break;
@@ -230,7 +235,7 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
 
     if (event == kCSIdentityQueryEventErrorOccurred)
     {
-        NSLog(@"Query %p error %@, info %@", _identityQuery, error, [error userInfo]);
+        NSLog(@"Query %p error %@, info %@", self.identityQuery, error, [error userInfo]);
     }
 }
 
@@ -243,39 +248,39 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (void)queryForIdentitiesByName:(NSString *)name
 {
-    if (_identityQuery)
+    if (self.identityQuery)
     {
-        CSIdentityQueryStop(_identityQuery);
-        CFRelease(_identityQuery);
+        CSIdentityQueryStop(self.identityQuery);
+        CFRelease(self.identityQuery);
     }
     CSIdentityQueryClientContext clientContext = { 0, (__bridge void *)(self), NULL, NULL, NULL, QueryEventCallback };
 
     /* Create a new identity query with the name passed in, most likely taken from the search field */
-    _identityQuery = CSIdentityQueryCreateForName(NULL, (__bridge CFStringRef)name, kCSIdentityQueryStringBeginsWith,
+    self.identityQuery = CSIdentityQueryCreateForName(NULL, (__bridge CFStringRef)name, kCSIdentityQueryStringBeginsWith,
         kCSIdentityClassUser, CSGetLocalIdentityAuthority());
 
     /* Run the query asynchronously and we'll get callbacks sent to our QueryEventCallback function. */
-    CSIdentityQueryExecuteAsynchronously(_identityQuery, kCSIdentityQueryGenerateUpdateEvents, &clientContext,
+    CSIdentityQueryExecuteAsynchronously(self.identityQuery, kCSIdentityQueryGenerateUpdateEvents, &clientContext,
         CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
 }
 
 - (void)startNewSearchQuery:(NSTimer*)theTimer
 {
     [self queryForIdentitiesByName:[_searchText stringValue]];
-    [_queryStartTimer invalidate];
-    _queryStartTimer = NULL;
+    [self.queryStartTimer invalidate];
+    self.queryStartTimer = nil;
 }
 
 - (void)searchTextDidChange:(NSNotification *)notification
 {
 #define QUERY_DELAY 0.25
-    if (_queryStartTimer)
+    if (self.queryStartTimer)
     {
-        [_queryStartTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:QUERY_DELAY]];
+        [self.queryStartTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:QUERY_DELAY]];
     }
     else
     {
-        _queryStartTimer = [NSTimer scheduledTimerWithTimeInterval:QUERY_DELAY target:self
+        self.queryStartTimer = [NSTimer scheduledTimerWithTimeInterval:QUERY_DELAY target:self
             selector:@selector(startNewSearchQuery:) userInfo:nil repeats:NO];
     }
 }
@@ -288,7 +293,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     if (currentIndex != -1)
     {
         /* Fetch all the actual settable values from the current identity */
-        CSIdentityRef identity = (__bridge CSIdentityRef)[_identities objectAtIndex:currentIndex];
+        CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
         NSString *fullName = (__bridge NSString *)CSIdentityGetFullName(identity);
         NSString *emailAddress = (__bridge NSString *)CSIdentityGetEmailAddress(identity);
         NSArray *aliases = (__bridge NSArray *)CSIdentityGetAliases(identity);
@@ -405,11 +410,10 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (void)awakeFromNib
 {
-    _identities = nil;
-    _identityQuery = NULL;
-    _userImage = [NSImage imageNamed:@"User"];
-    _groupImage = [NSImage imageNamed:@"Group"];
-    _queryStartTimer = NULL;
+    self.identityQuery = NULL;
+    self.userImage = [NSImage imageNamed:@"User"];
+    self.groupImage = [NSImage imageNamed:@"Group"];
+    self.queryStartTimer = nil;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(identityTableViewSelectionDidChange:)
         name:NSTableViewSelectionDidChangeNotification object:_identityTableView];
@@ -444,7 +448,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (void)dealloc
 {
-    [_queryStartTimer invalidate];
+    [self.queryStartTimer invalidate];
 }
 
 - (IBAction)classPopUpChanged:(id)sender
@@ -557,8 +561,8 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
         if (currentIndex != -1)
         {
-            NSUInteger count = [_identities count];
-            CSIdentityRef identity = (__bridge CSIdentityRef)[_identities objectAtIndex:currentIndex];
+            NSUInteger count = self.identities.count;
+            CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
 
             /* Don't allow us to delete the currently logged-in user */
             if (getuid() != CSIdentityGetPosixID(identity))
@@ -592,7 +596,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (IBAction)removeIdentity:(id)sender
 {
-    NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[_identities
+    NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[self.identities
         objectAtIndex:[_identityTableView selectedRow]]);
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setAlertStyle:NSAlertStyleCritical];
@@ -653,7 +657,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     if (currentIndex != -1)
     {
         CFErrorRef error;
-        CSIdentityRef identity = (__bridge CSIdentityRef)[_identities objectAtIndex:currentIndex];
+        CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
 
         CFStringRef fullName = (__bridge CFStringRef)_fullName.stringValue;
         CFStringRef emailAddress = (__bridge CFStringRef)_emailAddress.stringValue;
@@ -706,7 +710,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
     if (tv == _identityTableView)
     {
-        count = [_identities count];
+        count = self.identities.count;
     }
     else if (tv == _aliasesTableView)
     {
@@ -722,17 +726,17 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
     if (tv == _identityTableView)
     {
-        CSIdentityRef identity = (__bridge CSIdentityRef)[_identities objectAtIndex:row];
+        CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:row];
         if ([[tableColumn identifier] isEqual:@"Icon"])
         {
             CSIdentityClass class = CSIdentityGetClass(identity);
             if (class == kCSIdentityClassUser)
             {
-                value = _userImage;
+                value = self.userImage;
             }
             else if (class == kCSIdentityClassGroup)
             {
-                value = _groupImage;
+                value = self.groupImage;
             }
         }
         else if ([[tableColumn identifier] isEqual:@"Name"])
@@ -794,7 +798,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     {
         if ([self wasIdentityChanged] && [_identityTableView selectedRow] != row)
         {
-            NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[_identities
+            NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[self.identities
                 objectAtIndex:[_identityTableView selectedRow]]);
             NSAlert *alert = [[NSAlert alloc] init];
             [alert setAlertStyle:NSAlertStyleInformational];

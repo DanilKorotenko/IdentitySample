@@ -78,11 +78,6 @@
 	IBOutlet NSTextField *_addIdentityPosixNameLabel;
 	IBOutlet NSSecureTextField *_addIdentityPassword;
 	IBOutlet NSSecureTextField *_addIdentityVerify;
-	NSMutableArray *_identities;
-	NSImage *_userImage;
-	NSImage *_groupImage;
-	CSIdentityQueryRef _identityQuery;
-	NSTimer *_queryStartTimer;
 }
 
 @end
