@@ -458,7 +458,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         CSIdentityClass class = [_addIdentityClassPopUp indexOfSelectedItem] + 1;
         if (class == kCSIdentityClassGroup)
         {
-            [[NSApplication sharedApplication] endSheet:_addIdentityWindow returnCode:NSOKButton];
+            [[NSApplication sharedApplication] endSheet:_addIdentityWindow returnCode:NSModalResponseOK];
         }
         else if (class == kCSIdentityClassUser)
         {
@@ -470,7 +470,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
                 /* Only proceed if Generate Posix Name is set or if Posix name is at least one character */
                 if (generatePosixName || (!generatePosixName && [[_addIdentityPosixName stringValue] length]))
                 {
-                    [[NSApplication sharedApplication] endSheet:_addIdentityWindow returnCode:NSOKButton];
+                    [[NSApplication sharedApplication] endSheet:_addIdentityWindow returnCode:NSModalResponseOK];
                 }
             }
         }
@@ -479,14 +479,14 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (IBAction)cancelIdentity:(id)sender
 {
-    [[NSApplication sharedApplication] endSheet:_addIdentityWindow returnCode:NSCancelButton];
+    [[NSApplication sharedApplication] endSheet:_addIdentityWindow returnCode:NSModalResponseCancel];
 }
 
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     [sheet orderOut:self];
 
-    if (returnCode == NSOKButton)
+    if (returnCode == NSModalResponseOK)
     {
         NSString *fullName = [_addIdentityFullName stringValue];
 
@@ -581,7 +581,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[_identities
         objectAtIndex:[_identityTableView selectedRow]]);
     NSAlert *alert = [[NSAlert alloc] init];
-    [alert setAlertStyle:NSCriticalAlertStyle];
+    [alert setAlertStyle:NSAlertStyleCritical];
     [alert addButtonWithTitle:@"Delete"];
     [alert addButtonWithTitle:@"Cancel"];
     [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete the identity \"%@\"?",
@@ -783,7 +783,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
             NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[_identities
                 objectAtIndex:[_identityTableView selectedRow]]);
             NSAlert *alert = [[NSAlert alloc] init];
-            [alert setAlertStyle:NSInformationalAlertStyle];
+            [alert setAlertStyle:NSAlertStyleInformational];
             [alert addButtonWithTitle:@"Apply"];
             [alert addButtonWithTitle:@"Cancel"];
             [alert addButtonWithTitle:@"Don't Apply"];
