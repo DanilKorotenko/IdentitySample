@@ -54,7 +54,6 @@
 {
     if (_aliases != aliases)
     {
-        [_aliases release];
         _aliases = aliases ? [aliases mutableCopy] : [[NSMutableArray alloc] init];
         [_aliasesTableView reloadData];
     }
@@ -65,7 +64,7 @@
 {
     if (data)
     {
-        [_imageView setImage:[[[NSImage alloc] initWithData:data] autorelease]];
+        [_imageView setImage:[[NSImage alloc] initWithData:data]];
     }
 
     [_imageDataType setStringValue:type ? type : @""];
@@ -76,7 +75,7 @@
         [_imageURL setStringValue:imageURLString ? imageURLString : @""];
         if (!data)
         {
-            [_imageView setImage:[[[NSImage alloc] initWithContentsOfURL:url] autorelease]];
+            [_imageView setImage:[[NSImage alloc] initWithContentsOfURL:url]];
         }
     }
     else
@@ -108,17 +107,17 @@
     if (currentIndex != -1)
     {
         /* Fetch the CSIdentityRef corresponding to the current sidebar selection */
-        CSIdentityRef identity = (CSIdentityRef)[_identities objectAtIndex:currentIndex];
+        CSIdentityRef identity = (__bridge CSIdentityRef)[_identities objectAtIndex:currentIndex];
 
         /* Fetch all the Identity information to update the user interface */
-        NSString *fullName = (NSString *)CSIdentityGetFullName(identity);
-        NSString *posixName = (NSString *)CSIdentityGetPosixName(identity);
-        NSString *emailAddress = (NSString *)CSIdentityGetEmailAddress(identity);
-        NSArray *aliases = (NSArray *)CSIdentityGetAliases(identity);
-        NSData *imageData = (NSData *)CSIdentityGetImageData(identity);
-        NSString *imageDataType = (NSString *)CSIdentityGetImageDataType(identity);
-        NSURL *imageURL = (NSURL *)CSIdentityGetImageURL(identity);
-        NSString *uuidString = (NSString *)CFUUIDCreateString(NULL, CSIdentityGetUUID(identity));
+        NSString *fullName = (__bridge NSString *)CSIdentityGetFullName(identity);
+        NSString *posixName = (__bridge NSString *)CSIdentityGetPosixName(identity);
+        NSString *emailAddress = (__bridge NSString *)CSIdentityGetEmailAddress(identity);
+        NSArray *aliases = (__bridge NSArray *)CSIdentityGetAliases(identity);
+        NSData *imageData = (__bridge NSData *)CSIdentityGetImageData(identity);
+        NSString *imageDataType = (__bridge NSString *)CSIdentityGetImageDataType(identity);
+        NSURL *imageURL = (__bridge NSURL *)CSIdentityGetImageURL(identity);
+        NSString *uuidString = (NSString *)CFBridgingRelease(CFUUIDCreateString(NULL, CSIdentityGetUUID(identity)));
         BOOL isEnabled = (BOOL)CSIdentityIsEnabled(identity);
         int posixID = (int)CSIdentityGetPosixID(identity);
 
@@ -129,7 +128,7 @@
         [_fullName setStringValue:fullName ? fullName : @""];
         [_posixName setStringValue:posixName ? posixName : @""];
         [_emailAddress setStringValue:emailAddress ? emailAddress : @""];
-        [_uuid setStringValue:uuidString ? [uuidString autorelease] : @""];
+        [_uuid setStringValue:uuidString ? uuidString : @""];
         [_isEnabled setState:isEnabled];
         [_posixID setIntValue:posixID];
         [self setAliases:aliases];
@@ -167,8 +166,8 @@
 
 NSComparisonResult SortByFirstName(id val1, id val2, void *context)
 {
-    NSString *fullName1 = (NSString *)CSIdentityGetFullName((CSIdentityRef)val1);
-    NSString *fullName2 = (NSString *)CSIdentityGetFullName((CSIdentityRef)val2);
+    NSString *fullName1 = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)val1);
+    NSString *fullName2 = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)val2);
     return [fullName1 caseInsensitiveCompare:fullName2];
 }
 
@@ -180,18 +179,12 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
     if (currentIndex != -1)
     {
         /* Save away the currently selected identity in the sidebar */
-        selectedIdentity = (CSIdentityRef)[_identities objectAtIndex:currentIndex];
-        if (selectedIdentity)
-        {
-            CFRetain(selectedIdentity);
-        }
+        selectedIdentity = (__bridge CSIdentityRef)[_identities objectAtIndex:currentIndex];
     }
 
     /* Replace the previous identity list with the latest query results and sort it in alphabetical order */
-    NSArray *identities = (NSArray *)CSIdentityQueryCopyResults(_identityQuery);
-    [_identities release];
+    NSArray *identities = (NSArray *)CFBridgingRelease(CSIdentityQueryCopyResults(_identityQuery));
     _identities = [identities mutableCopy];
-    [identities release];
     [_identities sortUsingFunction:SortByFirstName context:nil];
     [_identityTableView reloadData];
 
@@ -228,8 +221,8 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
 void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CFArrayRef identities,
     CFErrorRef error, void *info)
 {
-    IdentityController *me = (IdentityController *)info;
-    [me receiveEvent:event fromQuery:query identities:(NSArray*)identities error:(NSError*)error];
+    IdentityController *me = (__bridge IdentityController *)info;
+    [me receiveEvent:event fromQuery:query identities:(__bridge NSArray*)identities error:(__bridge NSError*)error];
 }
 
 - (void)queryForIdentitiesByName:(NSString *)name
@@ -239,10 +232,10 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         CSIdentityQueryStop(_identityQuery);
         CFRelease(_identityQuery);
     }
-    CSIdentityQueryClientContext clientContext = { 0, self, NULL, NULL, NULL, QueryEventCallback };
+    CSIdentityQueryClientContext clientContext = { 0, (__bridge void *)(self), NULL, NULL, NULL, QueryEventCallback };
 
     /* Create a new identity query with the name passed in, most likely taken from the search field */
-    _identityQuery = CSIdentityQueryCreateForName(NULL, (CFStringRef)name, kCSIdentityQueryStringBeginsWith,
+    _identityQuery = CSIdentityQueryCreateForName(NULL, (__bridge CFStringRef)name, kCSIdentityQueryStringBeginsWith,
         kCSIdentityClassUser, CSGetLocalIdentityAuthority());
 
     /* Run the query asynchronously and we'll get callbacks sent to our QueryEventCallback function. */
@@ -279,11 +272,11 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     if (currentIndex != -1)
     {
         /* Fetch all the actual settable values from the current identity */
-        CSIdentityRef identity = (CSIdentityRef)[_identities objectAtIndex:currentIndex];
-        NSString *fullName = (NSString *)CSIdentityGetFullName(identity);
-        NSString *emailAddress = (NSString *)CSIdentityGetEmailAddress(identity);
-        NSArray *aliases = (NSArray *)CSIdentityGetAliases(identity);
-        NSURL *imageURL = (NSURL *)CSIdentityGetImageURL(identity);
+        CSIdentityRef identity = (__bridge CSIdentityRef)[_identities objectAtIndex:currentIndex];
+        NSString *fullName = (__bridge NSString *)CSIdentityGetFullName(identity);
+        NSString *emailAddress = (__bridge NSString *)CSIdentityGetEmailAddress(identity);
+        NSArray *aliases = (__bridge NSArray *)CSIdentityGetAliases(identity);
+        NSURL *imageURL = (__bridge NSURL *)CSIdentityGetImageURL(identity);
         BOOL isEnabled = (BOOL)CSIdentityIsEnabled(identity);
 
         /* Fetch all the modified values for the current identity */
@@ -399,8 +392,8 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     _identities = nil;
     _identityQuery = NULL;
     _aliases = [[NSMutableArray alloc] init];
-    _userImage = [[NSImage imageNamed:@"User"] retain];
-    _groupImage = [[NSImage imageNamed:@"Group"] retain];
+    _userImage = [NSImage imageNamed:@"User"];
+    _groupImage = [NSImage imageNamed:@"Group"];
     _queryStartTimer = NULL;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(identityTableViewSelectionDidChange:)
@@ -436,12 +429,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (void)dealloc
 {
-    [_aliases release];
-    [_identities release];
-    [_userImage release];
-    [_groupImage release];
     [_queryStartTimer invalidate];
-    [super dealloc];
 }
 
 - (IBAction)classPopUpChanged:(id)sender
@@ -507,21 +495,21 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
             CFErrorRef error;
             CSIdentityClass class = [_addIdentityClassPopUp indexOfSelectedItem] + 1;
             CFStringRef posixName = [_generatePosixNameButton state] ?
-                kCSIdentityGeneratePosixName : (CFStringRef)[_addIdentityPosixName stringValue];
+                kCSIdentityGeneratePosixName : (__bridge CFStringRef)[_addIdentityPosixName stringValue];
 
             /* Create a brand new identity */
-            CSIdentityRef identity = CSIdentityCreate(NULL, class, (CFStringRef)fullName, posixName,
+            CSIdentityRef identity = CSIdentityCreate(NULL, class, (__bridge CFStringRef)fullName, posixName,
                 kCSIdentityFlagNone, CSGetLocalIdentityAuthority());
             if (class == kCSIdentityClassUser)
             {
                 /* If this is a user identity, add a password */
-                CSIdentitySetPassword(identity, (CFStringRef)[_addIdentityPassword stringValue]);
+                CSIdentitySetPassword(identity, (__bridge CFStringRef)[_addIdentityPassword stringValue]);
             }
 
             /* Commit the new identity to the identity store */
             if (!CSIdentityCommit(identity, NULL, &error))
             {
-                NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [(NSError*)error userInfo] );
+                NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [(__bridge NSError*)error userInfo] );
             }
             [self queryForIdentitiesByName:[_searchText stringValue]];
         }
@@ -544,7 +532,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
     /* Display a sheet that allows you to add a new user or group identity to the system */
     [[NSApplication sharedApplication] beginSheet:_addIdentityWindow modalForWindow:[sender window]
-        modalDelegate:self didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) contextInfo:self];
+        modalDelegate:self didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void * _Null_unspecified)(self)];
 }
 
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)info
@@ -556,7 +544,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         if (currentIndex != -1)
         {
             NSUInteger count = [_identities count];
-            CSIdentityRef identity = (CSIdentityRef)[_identities objectAtIndex:currentIndex];
+            CSIdentityRef identity = (__bridge CSIdentityRef)[_identities objectAtIndex:currentIndex];
 
             /* Don't allow us to delete the currently logged-in user */
             if (getuid() != CSIdentityGetPosixID(identity))
@@ -577,7 +565,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
                 }
                 else
                 {
-                    NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [(NSError*)error userInfo]);
+                    NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [(__bridge NSError*)error userInfo]);
                 }
             }
             else
@@ -590,9 +578,9 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
 - (IBAction)removeIdentity:(id)sender
 {
-    NSString *currentFullName = (NSString *)CSIdentityGetFullName((CSIdentityRef)[_identities
+    NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[_identities
         objectAtIndex:[_identityTableView selectedRow]]);
-    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    NSAlert *alert = [[NSAlert alloc] init];
     [alert setAlertStyle:NSCriticalAlertStyle];
     [alert addButtonWithTitle:@"Delete"];
     [alert addButtonWithTitle:@"Cancel"];
@@ -600,7 +588,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         currentFullName]];
     [alert setInformativeText:@"You better be sure because this can't be undone."];
     [alert beginSheetModalForWindow:_mainWindow modalDelegate:self
-        didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:self];
+        didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void * _Nullable)(self)];
 }
 
 - (IBAction)addAlias:(id)sender
@@ -638,7 +626,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     count = aliases ? [aliases count] : 0;
     for (index = 0; index < count; index++)
     {
-        CSIdentityAddAlias(identity, (CFStringRef)[aliases objectAtIndex:index]);
+        CSIdentityAddAlias(identity, (__bridge CFStringRef)[aliases objectAtIndex:index]);
     }
 
     CFRelease(currentAliases);
@@ -651,12 +639,12 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     if (currentIndex != -1)
     {
         CFErrorRef error;
-        CSIdentityRef identity = (CSIdentityRef)[_identities objectAtIndex:currentIndex];
+        CSIdentityRef identity = (__bridge CSIdentityRef)[_identities objectAtIndex:currentIndex];
 
-        CFStringRef fullName = (CFStringRef)[_fullName stringValue];
-        CFStringRef emailAddress = (CFStringRef)[_emailAddress stringValue];
+        CFStringRef fullName = (__bridge CFStringRef)[_fullName stringValue];
+        CFStringRef emailAddress = (__bridge CFStringRef)[_emailAddress stringValue];
         NSString *imageURLString = [_imageURL stringValue];
-        CFURLRef imageURL = (CFURLRef)[NSURL fileURLWithPath:imageURLString];
+        CFURLRef imageURL = (__bridge CFURLRef)[NSURL fileURLWithPath:imageURLString];
         Boolean isEnabled = (Boolean)[_isEnabled state];
 
         if (fullName)
@@ -681,7 +669,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         /* Commit the changes back to the identity store */
         if (!CSIdentityCommit(identity, NULL, &error))
         {
-            NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [(NSError*)error userInfo]);
+            NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [(__bridge NSError*)error userInfo]);
         }
         else
         {
@@ -720,7 +708,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
 
     if (tv == _identityTableView)
     {
-        CSIdentityRef identity = (CSIdentityRef)[_identities objectAtIndex:row];
+        CSIdentityRef identity = (__bridge CSIdentityRef)[_identities objectAtIndex:row];
         if ([[tableColumn identifier] isEqual:@"Icon"])
         {
             CSIdentityClass class = CSIdentityGetClass(identity);
@@ -735,7 +723,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         }
         else if ([[tableColumn identifier] isEqual:@"Name"])
         {
-            value = (NSString *)CSIdentityGetFullName(identity);
+            value = (__bridge NSString *)CSIdentityGetFullName(identity);
         }
     }
     else if (tv == _aliasesTableView)
@@ -743,7 +731,7 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         value = [_aliases objectAtIndex:row];
     }
 
-    return [[value retain] autorelease];
+    return value;
 }
 
 - (void)removeAliases:(NSIndexSet *)set
@@ -792,9 +780,9 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
     {
         if ([self wasIdentityChanged] && [_identityTableView selectedRow] != row)
         {
-            NSString *currentFullName = (NSString *)CSIdentityGetFullName((CSIdentityRef)[_identities
+            NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[_identities
                 objectAtIndex:[_identityTableView selectedRow]]);
-            NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+            NSAlert *alert = [[NSAlert alloc] init];
             [alert setAlertStyle:NSInformationalAlertStyle];
             [alert addButtonWithTitle:@"Apply"];
             [alert addButtonWithTitle:@"Cancel"];
