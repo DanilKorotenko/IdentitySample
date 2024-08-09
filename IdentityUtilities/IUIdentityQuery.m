@@ -39,6 +39,28 @@
     return result;
 }
 
++ (NSArray *)localGroups
+{
+    NSArray *result = nil;
+
+    CSIdentityQueryRef iQuery = CSIdentityQueryCreate(kCFAllocatorDefault, kCSIdentityClassGroup,
+        CSGetLocalIdentityAuthority());
+
+    IUIdentityQuery *query = [[IUIdentityQuery alloc] initWithIdentityQuery:iQuery];
+
+    NSError *error = nil;
+    if ([query execute:&error])
+    {
+        result = query.identities;
+    }
+    else
+    {
+        NSLog(@"CSIdentityQueryRef execute error occured: %@", error);
+    }
+
+    return result;
+}
+
 // returns identity for user with exact match by FullName
 + (IUIdentity *)localUserWithFullName:(NSString *)aName
 {

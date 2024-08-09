@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface IUIdentityQuery : NSObject
 
 + (NSArray *)localUsers;
++ (NSArray *)localGroups;
 
 // returns identity for user with exact match by FullName
 + (IUIdentity *)localUserWithFullName:(NSString *)aName;
