@@ -42,6 +42,11 @@
     }
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@", self.fullName];
+}
+
 #pragma mark -
 
 - (NSString *)fullName
