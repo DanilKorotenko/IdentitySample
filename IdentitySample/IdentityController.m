@@ -169,7 +169,7 @@
         self.fullName.stringValue = identity.fullName ? identity.fullName : @"";
         self.posixName.stringValue = identity.posixName ? identity.posixName : @"";
         self.emailAddress.stringValue = identity.emailAddress ? identity.emailAddress : @"";
-        self.uuid.stringValue = identity.uuid ? identity.uuid.UUIDString : @"";
+        self.uuid.stringValue = identity.uuidString ? identity.uuidString : @"";
         self.isEnabled.state = identity.isEnabled;
         self.posixID.integerValue = identity.posixID;
         [self setAliases:[identity.aliases mutableCopy]];

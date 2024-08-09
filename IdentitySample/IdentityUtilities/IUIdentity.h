@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(readonly)     NSData          *imageData;
 @property(readonly)     NSString        *imageDataType;
 @property(readwrite)    NSURL           *imageURL;
-@property(readonly)     NSUUID          *uuid;
+@property(readonly)     NSString        *uuidString;
 @property(readwrite)    BOOL            isEnabled;
 @property(readonly)     NSInteger       posixID;
 @property(readonly)     CSIdentityClass identityClass;

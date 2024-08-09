@@ -22,7 +22,7 @@
 @synthesize imageData;
 @synthesize imageDataType;
 @synthesize imageURL;
-@synthesize uuid;
+@synthesize uuidString;
 
 - (instancetype)initWithIdentity:(CSIdentityRef)anIdentity
 {
@@ -126,13 +126,15 @@
     CSIdentitySetImageURL(self.identity, (__bridge CFURLRef)(imageURL));
 }
 
-- (NSUUID *)uuid
+- (NSString *)uuidString
 {
-    if (uuid == nil)
+    if (uuidString == nil)
     {
-        uuid = (__bridge NSUUID * _Nonnull)(CSIdentityGetUUID(self.identity));
+        CFUUIDRef identityUUID = CSIdentityGetUUID(self.identity);
+        CFStringRef uuidStringRef = CFUUIDCreateString(kCFAllocatorDefault, identityUUID);
+        uuidString = (__bridge NSString * _Nonnull)(uuidStringRef);
     }
-    return uuid;
+    return uuidString;
 }
 
 - (BOOL)isEnabled
