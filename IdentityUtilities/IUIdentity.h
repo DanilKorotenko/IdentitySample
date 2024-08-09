@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addAlias:(NSString *)anAlias;
 - (void)removeAlias:(NSString *)anAlias;
 
+// only applicable if identity is group
+- (void)addMember:(IUIdentity *)anIdentity;
+
 @end
 
 NS_ASSUME_NONNULL_END

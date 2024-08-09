@@ -223,4 +223,13 @@
     CSIdentityRemoveAlias(self.identity, (__bridge CFStringRef)(anAlias));
 }
 
+- (void)addMember:(IUIdentity *)anIdentity
+{
+    if (self.identityClass != kCSIdentityClassGroup)
+    {
+        return;
+    }
+    CSIdentityAddMember(self.identity, anIdentity.identity);
+}
+
 @end

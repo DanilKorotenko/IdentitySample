@@ -17,7 +17,7 @@
 
 @implementation IUIdentityQuery
 
-+ (NSArray *)localUsers
++ (NSArray *)identititesWithClass:(CSIdentityClass)aClass
 {
     NSArray *result = nil;
 
@@ -39,35 +39,23 @@
     return result;
 }
 
-+ (NSArray *)localGroups
++ (NSArray *)localUsers
 {
-    NSArray *result = nil;
-
-    CSIdentityQueryRef iQuery = CSIdentityQueryCreate(kCFAllocatorDefault, kCSIdentityClassGroup,
-        CSGetLocalIdentityAuthority());
-
-    IUIdentityQuery *query = [[IUIdentityQuery alloc] initWithIdentityQuery:iQuery];
-
-    NSError *error = nil;
-    if ([query execute:&error])
-    {
-        result = query.identities;
-    }
-    else
-    {
-        NSLog(@"CSIdentityQueryRef execute error occured: %@", error);
-    }
-
-    return result;
+    return [IUIdentityQuery identititesWithClass:kCSIdentityClassUser];
 }
 
-// returns identity for user with exact match by FullName
-+ (IUIdentity *)localUserWithFullName:(NSString *)aName
++ (NSArray *)localGroups
+{
+    return [IUIdentityQuery identititesWithClass:kCSIdentityClassGroup];
+}
+
+// returns identity with exact match by FullName
++ (IUIdentity *)identityWithClass:(CSIdentityClass)aClass fullName:(NSString *)aName
 {
     IUIdentity *result = nil;
 
     CSIdentityQueryRef iQuery = CSIdentityQueryCreateForName(kCFAllocatorDefault, (__bridge CFStringRef)(aName),
-        kCSIdentityQueryStringEquals, kCSIdentityClassUser, CSGetLocalIdentityAuthority());
+        kCSIdentityQueryStringEquals, aClass, CSGetLocalIdentityAuthority());
 
     IUIdentityQuery *query = [[IUIdentityQuery alloc] initWithIdentityQuery:iQuery];
 
@@ -86,6 +74,17 @@
     }
 
     return result;
+}
+
+// returns identity for user with exact match by FullName
++ (IUIdentity *)localUserWithFullName:(NSString *)aName
+{
+    return [IUIdentityQuery identityWithClass:kCSIdentityClassUser fullName:aName];
+}
+
++ (IUIdentity *)administratorsGroup
+{
+    return [IUIdentityQuery identityWithClass:kCSIdentityClassGroup fullName:@"admin"];
 }
 
 #pragma mark -

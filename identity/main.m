@@ -39,6 +39,21 @@ void addDeleteUser(void)
         {
             NSLog(@"Error occured on commit identity: %@", error);
         }
+
+        IUIdentity *administrators = [IUIdentityQuery administratorsGroup];
+        NSLog(@"administrators: %@", administrators);
+
+        NSLog(@"add testUser to administrators group");
+        [administrators addMember:testUser];
+
+        if ([administrators commit:&error])
+        {
+            NSLog(@"administrators commit successfully");
+        }
+        else
+        {
+            NSLog(@"Error occured on commit administrators: %@", error);
+        }
     }
 }
 
@@ -51,11 +66,12 @@ int main(int argc, const char * argv[])
 //        NSLog(@"local users:");
 //        NSLog(@"%@", [IUIdentityQuery localUsers]);
 
-//        addDeleteUser();
+        addDeleteUser();
 
-        NSLog(@"local groups:");
-        NSLog(@"%@", [IUIdentityQuery localGroups]);
+//        NSLog(@"local groups:");
+//        NSLog(@"%@", [IUIdentityQuery localGroups]);
 
+//        NSLog(@"administrators: %@", [IUIdentityQuery administratorsGroup]);
     }
     return 0;
 }
