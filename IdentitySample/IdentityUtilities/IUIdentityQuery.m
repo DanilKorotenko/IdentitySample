@@ -24,9 +24,10 @@
 
 #pragma mark -
 
-- (CSIdentityQueryRef)identityQueryRef
+- (NSArray *)identities
 {
-    return self.identityQuery;
+    NSArray *identities = (NSArray *)CFBridgingRelease(CSIdentityQueryCopyResults(self.identityQuery));
+    return identities;
 }
 
 #pragma mark -

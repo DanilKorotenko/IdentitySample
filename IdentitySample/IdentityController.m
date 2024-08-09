@@ -235,7 +235,7 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
     }
 
     /* Replace the previous identity list with the latest query results and sort it in alphabetical order */
-    NSArray *identities = (NSArray *)CFBridgingRelease(CSIdentityQueryCopyResults(self.identityQuery.identityQueryRef));
+    NSArray *identities = self.identityQuery.identities;
     self.identities = [identities mutableCopy];
     [self.identities sortUsingFunction:SortByFirstName context:nil];
     [self.identityTableView reloadData];
