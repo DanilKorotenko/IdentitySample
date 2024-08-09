@@ -60,6 +60,7 @@
 		847A47A0136A28E5000EE7AC = {
 			isa = PBXGroup;
 			children = (
+				DA82E4CC2C651D3600BDF75C /* IdentityUtilities */,
 				847A47B5136A28E5000EE7AC /* IdentitySample */,
 				847A47AE136A28E5000EE7AC /* Frameworks */,
 				847A47E8136A32F2000EE7AC /* Images */,
@@ -99,7 +100,6 @@
 		847A47B5136A28E5000EE7AC /* IdentitySample */ = {
 			isa = PBXGroup;
 			children = (
-				DA82E4CC2C651D3600BDF75C /* IdentityUtilities */,
 				847A47DE136A2B75000EE7AC /* IdentityController.h */,
 				847A47DF136A2B75000EE7AC /* IdentityController.m */,
 				847A47C4136A28E5000EE7AC /* MainMenu.xib */,
