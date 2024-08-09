@@ -48,6 +48,8 @@
 #import "IdentityController.h"
 #import <CoreServices/CoreServices.h>
 
+#import "IdentityUtilities/IUIdentityQuery.h"
+
 @interface IdentityController ()
 
 @property(strong) IBOutlet NSButton         *addAliasButton;
@@ -83,7 +85,7 @@
 @property(strong) NSMutableArray *identities;
 @property(strong) NSImage *userImage;
 @property(strong) NSImage *groupImage;
-@property(readwrite) CSIdentityQueryRef identityQuery;
+@property(strong) IUIdentityQuery *identityQuery;
 @property(strong) NSTimer *queryStartTimer;
 
 @end
@@ -233,7 +235,7 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
     }
 
     /* Replace the previous identity list with the latest query results and sort it in alphabetical order */
-    NSArray *identities = (NSArray *)CFBridgingRelease(CSIdentityQueryCopyResults(self.identityQuery));
+    NSArray *identities = (NSArray *)CFBridgingRelease(CSIdentityQueryCopyResults(self.identityQuery.identityQueryRef));
     self.identities = [identities mutableCopy];
     [self.identities sortUsingFunction:SortByFirstName context:nil];
     [self.identityTableView reloadData];
@@ -256,8 +258,7 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
     [self reloadIdentityAtIndex:[self.identityTableView selectedRow]];
 }
 
-- (void)receiveEvent:(CSIdentityQueryEvent)event fromQuery:(CSIdentityQueryRef)query identities:(NSArray*)identities
-    error:(NSError*)error
+- (void)receiveEvent:(CSIdentityQueryEvent)event error:(NSError*)error
 {
     /* Our query callback was called so lets update the sidebar */
     [self updateIdentities];
@@ -268,29 +269,18 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
     }
 }
 
-void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CFArrayRef identities,
-    CFErrorRef error, void *info)
-{
-    IdentityController *me = (__bridge IdentityController *)info;
-    [me receiveEvent:event fromQuery:query identities:(__bridge NSArray*)identities error:(__bridge NSError*)error];
-}
-
 - (void)queryForIdentitiesByName:(NSString *)name
 {
-    if (self.identityQuery)
+    if (!self.identityQuery)
     {
-        CSIdentityQueryStop(self.identityQuery);
-        CFRelease(self.identityQuery);
+        self.identityQuery = [[IUIdentityQuery alloc] init];
     }
-    CSIdentityQueryClientContext clientContext = { 0, (__bridge void *)(self), NULL, NULL, NULL, QueryEventCallback };
 
-    /* Create a new identity query with the name passed in, most likely taken from the search field */
-    self.identityQuery = CSIdentityQueryCreateForName(NULL, (__bridge CFStringRef)name, kCSIdentityQueryStringBeginsWith,
-        kCSIdentityClassUser, CSGetLocalIdentityAuthority());
-
-    /* Run the query asynchronously and we'll get callbacks sent to our QueryEventCallback function. */
-    CSIdentityQueryExecuteAsynchronously(self.identityQuery, kCSIdentityQueryGenerateUpdateEvents, &clientContext,
-        CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+    [self.identityQuery startForName:name eventBlock:
+        ^(CSIdentityQueryEvent event, NSError *anError)
+        {
+            [self receiveEvent:event error:anError];
+        }];
 }
 
 - (void)startNewSearchQuery:(NSTimer*)theTimer
