@@ -20,6 +20,18 @@
 		DA82E4D22C66112600BDF75C /* IUIdentity.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4D12C66112600BDF75C /* IUIdentity.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		DA82E4E02C662FD300BDF75C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		847A47AB136A28E5000EE7AC /* IdentitySample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IdentitySample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		847A47AF136A28E5000EE7AC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -41,7 +53,12 @@
 		DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IUIdentityQuery.m; sourceTree = "<group>"; };
 		DA82E4D02C66112600BDF75C /* IUIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUIdentity.h; sourceTree = "<group>"; };
 		DA82E4D12C66112600BDF75C /* IUIdentity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IUIdentity.m; sourceTree = "<group>"; };
+		DA82E4E22C662FD300BDF75C /* identity */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = identity; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		DA82E4E32C662FD300BDF75C /* identity */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = identity; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		847A47A8136A28E5000EE7AC /* Frameworks */ = {
@@ -54,6 +71,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DA82E4DF2C662FD300BDF75C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -62,6 +86,7 @@
 			children = (
 				DA82E4CC2C651D3600BDF75C /* IdentityUtilities */,
 				847A47B5136A28E5000EE7AC /* IdentitySample */,
+				DA82E4E32C662FD300BDF75C /* identity */,
 				847A47AE136A28E5000EE7AC /* Frameworks */,
 				847A47E8136A32F2000EE7AC /* Images */,
 				847A47AC136A28E5000EE7AC /* Products */,
@@ -72,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				847A47AB136A28E5000EE7AC /* IdentitySample.app */,
+				DA82E4E22C662FD300BDF75C /* identity */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -160,6 +186,28 @@
 			productReference = 847A47AB136A28E5000EE7AC /* IdentitySample.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DA82E4E12C662FD300BDF75C /* identity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA82E4E62C662FD300BDF75C /* Build configuration list for PBXNativeTarget "identity" */;
+			buildPhases = (
+				DA82E4DE2C662FD300BDF75C /* Sources */,
+				DA82E4DF2C662FD300BDF75C /* Frameworks */,
+				DA82E4E02C662FD300BDF75C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				DA82E4E32C662FD300BDF75C /* identity */,
+			);
+			name = identity;
+			packageProductDependencies = (
+			);
+			productName = identity;
+			productReference = DA82E4E22C662FD300BDF75C /* identity */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -168,6 +216,11 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					DA82E4E12C662FD300BDF75C = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
 			};
 			buildConfigurationList = 847A47A5136A28E5000EE7AC /* Build configuration list for PBXProject "IdentitySample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -183,6 +236,7 @@
 			projectRoot = "";
 			targets = (
 				847A47AA136A28E5000EE7AC /* IdentitySample */,
+				DA82E4E12C662FD300BDF75C /* identity */,
 			);
 		};
 /* End PBXProject section */
@@ -210,6 +264,13 @@
 				DA82E4CF2C6522B900BDF75C /* IUIdentityQuery.m in Sources */,
 				847A47E0136A2B75000EE7AC /* IdentityController.m in Sources */,
 				DA82E4D22C66112600BDF75C /* IUIdentity.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA82E4DE2C662FD300BDF75C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,6 +407,70 @@
 			};
 			name = Release;
 		};
+		DA82E4E72C662FD300BDF75C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		DA82E4E82C662FD300BDF75C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -363,6 +488,15 @@
 			buildConfigurations = (
 				847A47CA136A28E5000EE7AC /* Debug */,
 				847A47CB136A28E5000EE7AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA82E4E62C662FD300BDF75C /* Build configuration list for PBXNativeTarget "identity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA82E4E72C662FD300BDF75C /* Debug */,
+				DA82E4E82C662FD300BDF75C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
