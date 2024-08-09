@@ -21,8 +21,32 @@ int main(int argc, const char * argv[])
         if (testUser)
         {
             NSLog(@"testUser exist: %@", testUser);
+            NSLog(@"delete testUser");
+            [testUser deleteIdentity];
+            NSError *error = nil;
+            if ([testUser commit:&error])
+            {
+                NSLog(@"testUser delete successfully");
+            }
+            else
+            {
+                NSLog(@"Error occured on commit identity: %@", error);
+            }
         }
-
+        else
+        {
+            NSLog(@"Create testUser");
+            testUser = [IUIdentity newHiddenUserWithFullName:@"testUser" password:@"pass123456"];
+            NSError *error = nil;
+            if ([testUser commit:&error])
+            {
+                NSLog(@"testUser added successfully");
+            }
+            else
+            {
+                NSLog(@"Error occured on commit identity: %@", error);
+            }
+        }
     }
     return 0;
 }

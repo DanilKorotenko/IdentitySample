@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface IUIdentity : NSObject
 
++ (IUIdentity *)newHiddenUserWithFullName:(NSString *)aFullName password:(NSString *)aPassword;
+
 - (instancetype)initWithIdentity:(CSIdentityRef)anIdentity;
 
 @property(readwrite)    NSString        *fullName;

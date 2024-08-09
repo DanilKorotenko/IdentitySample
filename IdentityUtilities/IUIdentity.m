@@ -24,6 +24,29 @@
 @synthesize imageURL;
 @synthesize uuidString;
 
++ (IUIdentity *)newHiddenUserWithFullName:(NSString *)aFullName password:(NSString *)aPassword
+{
+    if (aFullName.length == 0 || aPassword.length == 0)
+    {
+        return nil;
+    }
+
+    IUIdentity *result = nil;
+
+    /* Create a brand new identity */
+    CSIdentityRef identity = CSIdentityCreate(kCFAllocatorDefault, kCSIdentityClassUser, (__bridge CFStringRef)aFullName,
+        kCSIdentityGeneratePosixName, kCSIdentityFlagHidden, CSGetLocalIdentityAuthority());
+
+    if (identity)
+    {
+        CSIdentitySetPassword(identity, (__bridge CFStringRef)aPassword);
+        result = [[IUIdentity alloc] initWithIdentity:identity];
+        CFRelease(identity);
+    }
+
+    return result;
+}
+
 - (instancetype)initWithIdentity:(CSIdentityRef)anIdentity
 {
     self = [super init];
