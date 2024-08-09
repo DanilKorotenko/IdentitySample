@@ -37,6 +37,11 @@
 		DA82E4D22C66112600BDF75C /* IUIdentity.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4D12C66112600BDF75C /* IUIdentity.m */; };
 		DA82E4F12C66339D00BDF75C /* IUIdentityQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */; };
 		DA82E4F22C6634EC00BDF75C /* IUIdentity.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4D12C66112600BDF75C /* IUIdentity.m */; };
+		DA82E5002C66633400BDF75C /* IUIdentityAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4FF2C66633400BDF75C /* IUIdentityAdapter.mm */; };
+		DA82E5012C66633400BDF75C /* IUIdentityAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4FF2C66633400BDF75C /* IUIdentityAdapter.mm */; };
+		DA82E5022C66651800BDF75C /* IUIdentityAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4FF2C66633400BDF75C /* IUIdentityAdapter.mm */; };
+		DA82E5032C66654D00BDF75C /* IUIdentityQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */; };
+		DA82E5042C66655D00BDF75C /* IUIdentity.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4D12C66112600BDF75C /* IUIdentity.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +105,8 @@
 		DA82E4D12C66112600BDF75C /* IUIdentity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IUIdentity.m; sourceTree = "<group>"; };
 		DA82E4E22C662FD300BDF75C /* identity */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = identity; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA82E4F72C6662DF00BDF75C /* cppidentity */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cppidentity; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA82E4FE2C66633400BDF75C /* IUIdentityAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUIdentityAdapter.h; sourceTree = "<group>"; };
+		DA82E4FF2C66633400BDF75C /* IUIdentityAdapter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = IUIdentityAdapter.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -218,6 +225,8 @@
 				DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */,
 				DA82E4D02C66112600BDF75C /* IUIdentity.h */,
 				DA82E4D12C66112600BDF75C /* IUIdentity.m */,
+				DA82E4FE2C66633400BDF75C /* IUIdentityAdapter.h */,
+				DA82E4FF2C66633400BDF75C /* IUIdentityAdapter.mm */,
 			);
 			path = IdentityUtilities;
 			sourceTree = "<group>";
@@ -348,6 +357,7 @@
 			files = (
 				847A47BD136A28E5000EE7AC /* main.m in Sources */,
 				DA82E4CF2C6522B900BDF75C /* IUIdentityQuery.m in Sources */,
+				DA82E5002C66633400BDF75C /* IUIdentityAdapter.mm in Sources */,
 				847A47E0136A2B75000EE7AC /* IdentityController.m in Sources */,
 				DA82E4D22C66112600BDF75C /* IUIdentity.m in Sources */,
 			);
@@ -359,6 +369,7 @@
 			files = (
 				DA82E4F12C66339D00BDF75C /* IUIdentityQuery.m in Sources */,
 				DA82E4F22C6634EC00BDF75C /* IUIdentity.m in Sources */,
+				DA82E5012C66633400BDF75C /* IUIdentityAdapter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +377,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA82E5032C66654D00BDF75C /* IUIdentityQuery.m in Sources */,
+				DA82E5022C66651800BDF75C /* IUIdentityAdapter.mm in Sources */,
+				DA82E5042C66655D00BDF75C /* IUIdentity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
