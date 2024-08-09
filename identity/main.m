@@ -14,6 +14,9 @@ int main(int argc, const char * argv[])
     {
         NSLog(@"Hello, identity!");
 
+        NSLog(@"local users:");
+        NSLog(@"%@", [IUIdentityQuery localUsers]);
+
     }
     return 0;
 }

@@ -18,6 +18,38 @@
 
 @implementation IUIdentityQuery
 
++ (NSArray *)localUsers
+{
+    NSArray *result = nil;
+
+    CSIdentityQueryRef iQuery = CSIdentityQueryCreate(kCFAllocatorDefault, kCSIdentityClassUser,
+        CSGetLocalIdentityAuthority());
+
+    IUIdentityQuery *query = [[IUIdentityQuery alloc] initWithIdentityQuery:iQuery];
+
+    NSError *error = nil;
+    if ([query execute:&error])
+    {
+        result = query.identities;
+    }
+    else
+    {
+        NSLog(@"CSIdentityQueryRef execute error occured: %@", error);
+    }
+
+    return result;
+}
+
+- (instancetype)initWithIdentityQuery:(CSIdentityQueryRef)anIdentityQuery
+{
+    self = [super init];
+    if (self)
+    {
+        self.identityQuery = anIdentityQuery;
+    }
+    return self;
+}
+
 - (void)dealloc
 {
     [self stop];
@@ -77,6 +109,17 @@ void QueryEventCallback(CSIdentityQueryRef query, CSIdentityQueryEvent event, CF
         CFRelease(self.identityQuery);
         self.identityQuery = NULL;
     }
+}
+
+- (BOOL)execute:(NSError **)anError
+{
+    CFErrorRef error = NULL;
+    Boolean result = CSIdentityQueryExecute(self.identityQuery, kCSIdentityQueryIncludeHiddenIdentities, &error);
+    if (anError && error)
+    {
+        *anError = (__bridge NSError *)(error);
+    }
+    return result ? YES : NO;
 }
 
 #pragma mark -

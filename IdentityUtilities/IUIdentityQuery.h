@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface IUIdentityQuery : NSObject
 
++ (NSArray *)localUsers;
+
 @property(readonly) NSArray *identities;
 
 - (void)startForName:(NSString *)aName eventBlock:(void (^)(CSIdentityQueryEvent event, NSError *anError))anEventBlock;

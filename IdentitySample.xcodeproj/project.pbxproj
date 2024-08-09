@@ -3,8 +3,25 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
+
+/* Begin PBXAggregateTarget section */
+		DA82E4E92C6632CC00BDF75C /* BuildAll */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = DA82E4EA2C6632CC00BDF75C /* Build configuration list for PBXAggregateTarget "BuildAll" */;
+			buildPhases = (
+			);
+			dependencies = (
+				DA82E4EE2C6632D700BDF75C /* PBXTargetDependency */,
+				DA82E4F02C6632D700BDF75C /* PBXTargetDependency */,
+			);
+			name = BuildAll;
+			packageProductDependencies = (
+			);
+			productName = BuildAll;
+		};
+/* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
 		847A47B0136A28E5000EE7AC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847A47AF136A28E5000EE7AC /* Cocoa.framework */; };
@@ -18,7 +35,26 @@
 		847A47F4136A3382000EE7AC /* User.png in Resources */ = {isa = PBXBuildFile; fileRef = 847A47EE136A32F2000EE7AC /* User.png */; };
 		DA82E4CF2C6522B900BDF75C /* IUIdentityQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */; };
 		DA82E4D22C66112600BDF75C /* IUIdentity.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4D12C66112600BDF75C /* IUIdentity.m */; };
+		DA82E4F12C66339D00BDF75C /* IUIdentityQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */; };
+		DA82E4F22C6634EC00BDF75C /* IUIdentity.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4D12C66112600BDF75C /* IUIdentity.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DA82E4ED2C6632D700BDF75C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 847A47A2136A28E5000EE7AC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 847A47AA136A28E5000EE7AC;
+			remoteInfo = IdentitySample;
+		};
+		DA82E4EF2C6632D700BDF75C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 847A47A2136A28E5000EE7AC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA82E4E12C662FD300BDF75C;
+			remoteInfo = identity;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		DA82E4E02C662FD300BDF75C /* CopyFiles */ = {
@@ -220,6 +256,9 @@
 					DA82E4E12C662FD300BDF75C = {
 						CreatedOnToolsVersion = 16.0;
 					};
+					DA82E4E92C6632CC00BDF75C = {
+						CreatedOnToolsVersion = 16.0;
+					};
 				};
 			};
 			buildConfigurationList = 847A47A5136A28E5000EE7AC /* Build configuration list for PBXProject "IdentitySample" */;
@@ -237,6 +276,7 @@
 			targets = (
 				847A47AA136A28E5000EE7AC /* IdentitySample */,
 				DA82E4E12C662FD300BDF75C /* identity */,
+				DA82E4E92C6632CC00BDF75C /* BuildAll */,
 			);
 		};
 /* End PBXProject section */
@@ -271,10 +311,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA82E4F12C66339D00BDF75C /* IUIdentityQuery.m in Sources */,
+				DA82E4F22C6634EC00BDF75C /* IUIdentity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DA82E4EE2C6632D700BDF75C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 847A47AA136A28E5000EE7AC /* IdentitySample */;
+			targetProxy = DA82E4ED2C6632D700BDF75C /* PBXContainerItemProxy */;
+		};
+		DA82E4F02C6632D700BDF75C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA82E4E12C662FD300BDF75C /* identity */;
+			targetProxy = DA82E4EF2C6632D700BDF75C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		847A47B8136A28E5000EE7AC /* InfoPlist.strings */ = {
@@ -471,6 +526,22 @@
 			};
 			name = Release;
 		};
+		DA82E4EB2C6632CC00BDF75C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		DA82E4EC2C6632CC00BDF75C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -497,6 +568,15 @@
 			buildConfigurations = (
 				DA82E4E72C662FD300BDF75C /* Debug */,
 				DA82E4E82C662FD300BDF75C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA82E4EA2C6632CC00BDF75C /* Build configuration list for PBXAggregateTarget "BuildAll" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA82E4EB2C6632CC00BDF75C /* Debug */,
+				DA82E4EC2C6632CC00BDF75C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
