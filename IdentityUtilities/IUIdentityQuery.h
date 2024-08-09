@@ -6,12 +6,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "IUIdentity.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface IUIdentityQuery : NSObject
 
 + (NSArray *)localUsers;
+
+// returns identity for user with exact match by FullName
++ (IUIdentity *)localUserWithFullName:(NSString *)aName;
 
 @property(readonly) NSArray *identities;
 

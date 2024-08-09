@@ -6,7 +6,6 @@
 //
 
 #import "IUIdentityQuery.h"
-#import "IUIdentity.h"
 
 @interface IUIdentityQuery ()
 
@@ -39,6 +38,35 @@
 
     return result;
 }
+
+// returns identity for user with exact match by FullName
++ (IUIdentity *)localUserWithFullName:(NSString *)aName
+{
+    IUIdentity *result = nil;
+
+    CSIdentityQueryRef iQuery = CSIdentityQueryCreateForName(kCFAllocatorDefault, (__bridge CFStringRef)(aName),
+        kCSIdentityQueryStringEquals, kCSIdentityClassUser, CSGetLocalIdentityAuthority());
+
+    IUIdentityQuery *query = [[IUIdentityQuery alloc] initWithIdentityQuery:iQuery];
+
+    NSError *error = nil;
+    if ([query execute:&error])
+    {
+        NSArray *identities = query.identities;
+        if (identities.count > 0)
+        {
+            result = [identities objectAtIndex:0];
+        }
+    }
+    else
+    {
+        NSLog(@"CSIdentityQueryRef execute error occured: %@", error);
+    }
+
+    return result;
+}
+
+#pragma mark -
 
 - (instancetype)initWithIdentityQuery:(CSIdentityQueryRef)anIdentityQuery
 {

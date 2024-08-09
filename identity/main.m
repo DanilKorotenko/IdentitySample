@@ -14,8 +14,14 @@ int main(int argc, const char * argv[])
     {
         NSLog(@"Hello, identity!");
 
-        NSLog(@"local users:");
-        NSLog(@"%@", [IUIdentityQuery localUsers]);
+//        NSLog(@"local users:");
+//        NSLog(@"%@", [IUIdentityQuery localUsers]);
+
+        IUIdentity *testUser = [IUIdentityQuery localUserWithFullName:@"testUser"];
+        if (testUser)
+        {
+            NSLog(@"testUser exist: %@", testUser);
+        }
 
     }
     return 0;
