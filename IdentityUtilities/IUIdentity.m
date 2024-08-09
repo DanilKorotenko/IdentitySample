@@ -180,6 +180,16 @@
     return result ? YES : NO;
 }
 
+- (void)commitAsyncDidEndBlock:(void (^)(BOOL commitResult, NSError *anError))didEndBlock
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+    ^{
+        NSError *error = nil;
+        BOOL result = [self commit:&error];
+        didEndBlock(result, error);
+    });
+}
+
 - (void)addAlias:(NSString *)anAlias
 {
     CSIdentityAddAlias(self.identity, (__bridge CFStringRef)(anAlias));

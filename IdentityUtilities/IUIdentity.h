@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)deleteIdentity;
 - (BOOL)commit:(NSError **)anError;
+- (void)commitAsyncDidEndBlock:(void (^)(BOOL commitResult, NSError *anError))didEndBlock;
 
 - (void)addAlias:(NSString *)anAlias;
 - (void)removeAlias:(NSString *)anAlias;

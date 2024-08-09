@@ -569,24 +569,26 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
             /* Don't allow us to delete the currently logged-in user */
             if (getuid() != identity.posixID)
             {
-                NSError *error = nil;
-
                 /* Delete the currently selected identity */
                 [identity deleteIdentity];
 
                 /* Commit the change back to the identity store */
-                if ([identity commit:&error])
-                {
-                    [self queryForIdentitiesByName:[self.searchText stringValue]];
-                    NSUInteger indexToSelect = ((NSUInteger)currentIndex == count && currentIndex > 0) ?
-                        (currentIndex - 1) : currentIndex;
-                    [self.identityTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:indexToSelect]
-                        byExtendingSelection:NO];
-                }
-                else
-                {
-                    NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [error userInfo]);
-                }
+                [identity commitAsyncDidEndBlock:
+                    ^(BOOL commitResult, NSError * _Nonnull anError)
+                    {
+                        if (commitResult)
+                        {
+                            [self queryForIdentitiesByName:[self.searchText stringValue]];
+                            NSUInteger indexToSelect = ((NSUInteger)currentIndex == count && currentIndex > 0) ?
+                                (currentIndex - 1) : currentIndex;
+                            [self.identityTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:indexToSelect]
+                                byExtendingSelection:NO];
+                        }
+                        else
+                        {
+                            NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", anError, [anError userInfo]);
+                        }
+                    }];
             }
             else
             {
@@ -680,17 +682,19 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
             identity.isEnabled = self.isEnabled.state;
         }
 
-        NSError *error = nil;
-
         /* Commit the changes back to the identity store */
-        if (![identity commit:&error])
-        {
-            NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [error userInfo]);
-        }
-        else
-        {
-            [self updateApplyAndRevert];
-        }
+        [identity commitAsyncDidEndBlock:
+            ^(BOOL commitResult, NSError * _Nonnull anError)
+            {
+                if (!commitResult)
+                {
+                    NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", anError, [anError userInfo]);
+                }
+                else
+                {
+                    [self updateApplyAndRevert];
+                }
+            }];
     }
 
     [self.mainWindow makeFirstResponder:self.identityTableView];
