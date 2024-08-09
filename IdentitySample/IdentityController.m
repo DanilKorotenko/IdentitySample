@@ -93,22 +93,22 @@
 
 @implementation IdentityController
 
-@synthesize aliases;
+@synthesize aliases = _aliases;
 
 - (NSMutableArray *)aliases
 {
-    if (aliases == nil)
+    if (_aliases == nil)
     {
-        aliases = [NSMutableArray array];
+        _aliases = [NSMutableArray array];
     }
-    return aliases;
+    return _aliases;
 }
 
 - (void)setAliases:(NSMutableArray *)anAliases
 {
-    if (aliases != anAliases)
+    if (_aliases != anAliases)
     {
-        aliases = anAliases ? anAliases : [NSMutableArray array];
+        _aliases = anAliases ? anAliases : [NSMutableArray array];
         [self.aliasesTableView reloadData];
     }
 }
@@ -160,32 +160,20 @@
     if (currentIndex != -1)
     {
         /* Fetch the CSIdentityRef corresponding to the current sidebar selection */
-        CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
-
-        /* Fetch all the Identity information to update the user interface */
-        NSString *fullName = (__bridge NSString *)CSIdentityGetFullName(identity);
-        NSString *posixName = (__bridge NSString *)CSIdentityGetPosixName(identity);
-        NSString *emailAddress = (__bridge NSString *)CSIdentityGetEmailAddress(identity);
-        NSArray *aliases = (__bridge NSArray *)CSIdentityGetAliases(identity);
-        NSData *imageData = (__bridge NSData *)CSIdentityGetImageData(identity);
-        NSString *imageDataType = (__bridge NSString *)CSIdentityGetImageDataType(identity);
-        NSURL *imageURL = (__bridge NSURL *)CSIdentityGetImageURL(identity);
-        NSString *uuidString = (NSString *)CFBridgingRelease(CFUUIDCreateString(NULL, CSIdentityGetUUID(identity)));
-        BOOL isEnabled = (BOOL)CSIdentityIsEnabled(identity);
-        int posixID = (int)CSIdentityGetPosixID(identity);
+        IUIdentity *identity = [self.identities objectAtIndex:currentIndex];
 
         /* Enable all the controls */
         [self setIdentityInfoEnabled:YES];
 
         /* Update the user interface with the current info */
-        self.fullName.stringValue = fullName ? fullName : @"";
-        self.posixName.stringValue = posixName ? posixName : @"";
-        self.emailAddress.stringValue = emailAddress ? emailAddress : @"";
-        self.uuid.stringValue = uuidString ? uuidString : @"";
-        self.isEnabled.state = isEnabled;
-        self.posixID.intValue = posixID;
-        [self setAliases:[aliases mutableCopy]];
-        [self setImageWithData:imageData type:imageDataType url:imageURL];
+        self.fullName.stringValue = identity.fullName ? identity.fullName : @"";
+        self.posixName.stringValue = identity.posixName ? identity.posixName : @"";
+        self.emailAddress.stringValue = identity.emailAddress ? identity.emailAddress : @"";
+        self.uuid.stringValue = identity.uuid ? identity.uuid.UUIDString : @"";
+        self.isEnabled.state = identity.isEnabled;
+        self.posixID.integerValue = identity.posixID;
+        [self setAliases:[identity.aliases mutableCopy]];
+        [self setImageWithData:identity.imageData type:identity.imageDataType url:identity.imageURL];
 
         /* Enable the Add Alias button and disable the Remove Alias button */
         self.addAliasButton.enabled = YES;
@@ -219,20 +207,20 @@
 
 NSComparisonResult SortByFirstName(id val1, id val2, void *context)
 {
-    NSString *fullName1 = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)val1);
-    NSString *fullName2 = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)val2);
+    NSString *fullName1 = [(IUIdentity *)val1 fullName];
+    NSString *fullName2 = [(IUIdentity *)val2 fullName];
     return [fullName1 caseInsensitiveCompare:fullName2];
 }
 
 - (void)updateIdentities
 {
-    CSIdentityRef selectedIdentity = NULL;
+    IUIdentity *selectedIdentity = nil;
     NSInteger currentIndex = [self.identityTableView selectedRow];
 
     if (currentIndex != -1)
     {
         /* Save away the currently selected identity in the sidebar */
-        selectedIdentity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
+        selectedIdentity = [self.identities objectAtIndex:currentIndex];
     }
 
     /* Replace the previous identity list with the latest query results and sort it in alphabetical order */
@@ -247,13 +235,12 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
         NSUInteger index, count = self.identities.count;
         for (index = 0; index < count; index++)
         {
-            if (CFEqual(selectedIdentity, (CSIdentityRef)[self.identities objectAtIndex:index]))
+            if ([selectedIdentity isEqual:[self.identities objectAtIndex:index]])
             {
                 [self.identityTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
                 break;
             }
         }
-        CFRelease(selectedIdentity);
     }
 
     [self reloadIdentityAtIndex:[self.identityTableView selectedRow]];
@@ -313,39 +300,34 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
     if (currentIndex != -1)
     {
         /* Fetch all the actual settable values from the current identity */
-        CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
-        NSString *fullName = (__bridge NSString *)CSIdentityGetFullName(identity);
-        NSString *emailAddress = (__bridge NSString *)CSIdentityGetEmailAddress(identity);
-        NSArray *aliases = (__bridge NSArray *)CSIdentityGetAliases(identity);
-        NSURL *imageURL = (__bridge NSURL *)CSIdentityGetImageURL(identity);
-        BOOL isEnabled = (BOOL)CSIdentityIsEnabled(identity);
+        IUIdentity *identity = [self.identities objectAtIndex:currentIndex];
 
         /* Fetch all the modified values for the current identity */
-        NSString *_newFullName = [self.fullName stringValue];
-        NSString *_newEmailAddress = [self.emailAddress stringValue];
+        NSString *newFullName = [self.fullName stringValue];
+        NSString *newEmailAddress = [self.emailAddress stringValue];
         NSString *imageURLString = [self.imageURL stringValue];
-        NSURL *_newImageURL = [NSURL fileURLWithPath:imageURLString];
-        BOOL _newIsEnabled = [self.isEnabled state];
+        NSURL *newImageURL = [NSURL fileURLWithPath:imageURLString];
+        BOOL newIsEnabled = [self.isEnabled state];
 
         /* If any of these values have changed, then return YES */
-        if (![fullName isEqual:_newFullName])
+        if (![identity.fullName isEqual:newFullName])
         {
             wasChanged = YES;
         }
-        else if (!((!emailAddress && [_newEmailAddress length] == 0) ||
-            (emailAddress && [emailAddress isEqual:_newEmailAddress])))
+        else if (!((!identity.emailAddress && [newEmailAddress length] == 0) ||
+            (identity.emailAddress && [identity.emailAddress isEqual:newEmailAddress])))
         {
             wasChanged = YES;
         }
-        else if (!((!imageURL && !_newImageURL) || (imageURL && [imageURL isEqual:_newImageURL])))
+        else if (!((!identity.imageURL && !newImageURL) || (identity.imageURL && [identity.imageURL isEqual:newImageURL])))
         {
             wasChanged = YES;
         }
-        else if (!((!aliases && [self.aliases count] == 0) || (aliases && [aliases isEqual:self.aliases])))
+        else if (!((!identity.aliases && [self.aliases count] == 0) || (identity.aliases && [identity.aliases isEqual:self.aliases])))
         {
             wasChanged = YES;
         }
-        else if (isEnabled != _newIsEnabled)
+        else if (identity.isEnabled != newIsEnabled)
         {
             wasChanged = YES;
         }
@@ -582,18 +564,18 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
         if (currentIndex != -1)
         {
             NSUInteger count = self.identities.count;
-            CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
+            IUIdentity *identity = [self.identities objectAtIndex:currentIndex];
 
             /* Don't allow us to delete the currently logged-in user */
-            if (getuid() != CSIdentityGetPosixID(identity))
+            if (getuid() != identity.posixID)
             {
-                CFErrorRef error;
+                NSError *error = nil;
 
                 /* Delete the currently selected identity */
-                CSIdentityDelete(identity);
+                [identity deleteIdentity];
 
                 /* Commit the change back to the identity store */
-                if (CSIdentityCommit(identity, NULL, &error))
+                if ([identity commit:&error])
                 {
                     [self queryForIdentitiesByName:[self.searchText stringValue]];
                     NSUInteger indexToSelect = ((NSUInteger)currentIndex == count && currentIndex > 0) ?
@@ -603,7 +585,7 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
                 }
                 else
                 {
-                    NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [(__bridge NSError*)error userInfo]);
+                    NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [error userInfo]);
                 }
             }
             else
@@ -616,8 +598,7 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
 
 - (IBAction)removeIdentity:(id)sender
 {
-    NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[self.identities
-        objectAtIndex:[self.identityTableView selectedRow]]);
+    NSString *currentFullName = [[self.identities objectAtIndex:[self.identityTableView selectedRow]] fullName];
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setAlertStyle:NSAlertStyleCritical];
     [alert addButtonWithTitle:@"Delete"];
@@ -652,25 +633,22 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
     [self updateApplyAndRevert];
 }
 
-- (void)setAliases:(NSArray *)aliases forIdentity:(CSIdentityRef)identity
+- (void)setAliases:(NSArray *)aliases forIdentity:(IUIdentity *)identity
 {
-    CFArrayRef currentAliases = CFArrayCreateCopy(NULL, CSIdentityGetAliases(identity));
-    CFIndex index, count = CFArrayGetCount(currentAliases);
+    NSArray *currentAliases = [identity.aliases copy];
 
     /* First remove all the current aliases for this identity */
-    for (index = 0; index < count; index++)
+    for (NSInteger index = 0; index < currentAliases.count; index++)
     {
-        CSIdentityRemoveAlias(identity, (CFStringRef)CFArrayGetValueAtIndex(currentAliases, index));
+        [identity removeAlias:[currentAliases objectAtIndex:index]];
     }
 
     /* Then add all the new aliases for this identity */
-    count = aliases ? [aliases count] : 0;
-    for (index = 0; index < count; index++)
+    NSInteger count = aliases ? [aliases count] : 0;
+    for (NSInteger index = 0; index < count; index++)
     {
-        CSIdentityAddAlias(identity, (__bridge CFStringRef)[aliases objectAtIndex:index]);
+        [identity addAlias:[aliases objectAtIndex:index]];
     }
-
-    CFRelease(currentAliases);
 }
 
 - (IBAction)apply:(id)sender
@@ -679,38 +657,35 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
 
     if (currentIndex != -1)
     {
-        CFErrorRef error;
-        CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:currentIndex];
+        IUIdentity *identity = [self.identities objectAtIndex:currentIndex];
 
-        CFStringRef fullName = (__bridge CFStringRef)self.fullName.stringValue;
-        CFStringRef emailAddress = (__bridge CFStringRef)self.emailAddress.stringValue;
-        NSString *imageURLString = self.imageURL.stringValue;
-        CFURLRef imageURL = (__bridge CFURLRef)[NSURL fileURLWithPath:imageURLString];
-        Boolean isEnabled = (Boolean)self.isEnabled.state;
-
-        if (fullName)
+        if (self.fullName.stringValue)
         {
-            CSIdentitySetFullName(identity, fullName);
+            identity.fullName = self.fullName.stringValue;
         }
-        CSIdentitySetEmailAddress(identity, CFStringGetLength(emailAddress) ? emailAddress : NULL);
-        CSIdentitySetImageURL(identity, imageURL);
+
+        identity.emailAddress = self.emailAddress.stringValue;
+        identity.imageURL = [NSURL fileURLWithPath:self.imageURL.stringValue];
+
         [self setAliases:self.aliases forIdentity:identity];
 
         /* Don't allow us to disable the currently logged-in user */
-        if (getuid() == CSIdentityGetPosixID(identity) && isEnabled == NO)
+        if (getuid() == identity.posixID && self.isEnabled.state == NO)
         {
             NSLog(@"Disabling the currently logged-in user is a bad idea");
             [self.isEnabled setState:YES];
         }
         else
         {
-            CSIdentitySetIsEnabled(identity, isEnabled);
+            identity.isEnabled = self.isEnabled.state;
         }
 
+        NSError *error = nil;
+
         /* Commit the changes back to the identity store */
-        if (!CSIdentityCommit(identity, NULL, &error))
+        if (![identity commit:&error])
         {
-            NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [(__bridge NSError*)error userInfo]);
+            NSLog(@"CSIdentityCommit returned error %@ userInfo %@)", error, [error userInfo]);
         }
         else
         {
@@ -749,10 +724,10 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
 
     if (tv == self.identityTableView)
     {
-        CSIdentityRef identity = (__bridge CSIdentityRef)[self.identities objectAtIndex:row];
+        IUIdentity *identity = [self.identities objectAtIndex:row];
         if ([[tableColumn identifier] isEqual:@"Icon"])
         {
-            CSIdentityClass class = CSIdentityGetClass(identity);
+            CSIdentityClass class = identity.identityClass;
             if (class == kCSIdentityClassUser)
             {
                 value = self.userImage;
@@ -764,7 +739,7 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
         }
         else if ([[tableColumn identifier] isEqual:@"Name"])
         {
-            value = (__bridge NSString *)CSIdentityGetFullName(identity);
+            value = identity.fullName;
         }
     }
     else if (tv == self.aliasesTableView)
@@ -820,8 +795,7 @@ NSComparisonResult SortByFirstName(id val1, id val2, void *context)
     {
         if ([self wasIdentityChanged] && [self.identityTableView selectedRow] != row)
         {
-            NSString *currentFullName = (__bridge NSString *)CSIdentityGetFullName((__bridge CSIdentityRef)[self.identities
-                objectAtIndex:[self.identityTableView selectedRow]]);
+            NSString *currentFullName = [[self.identities objectAtIndex:[self.identityTableView selectedRow]] fullName];
             NSAlert *alert = [[NSAlert alloc] init];
             [alert setAlertStyle:NSAlertStyleInformational];
             [alert addButtonWithTitle:@"Apply"];

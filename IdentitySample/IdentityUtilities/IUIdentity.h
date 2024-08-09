@@ -13,6 +13,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithIdentity:(CSIdentityRef)anIdentity;
 
+@property(readwrite)    NSString        *fullName;
+@property(readonly)     NSString        *posixName;
+@property(readwrite)    NSString        *emailAddress;
+@property(readonly)     NSArray         *aliases;
+@property(readonly)     NSData          *imageData;
+@property(readonly)     NSString        *imageDataType;
+@property(readwrite)    NSURL           *imageURL;
+@property(readonly)     NSUUID          *uuid;
+@property(readwrite)    BOOL            isEnabled;
+@property(readonly)     NSInteger       posixID;
+@property(readonly)     CSIdentityClass identityClass;
+
+- (void)deleteIdentity;
+- (BOOL)commit:(NSError **)anError;
+
+- (void)addAlias:(NSString *)anAlias;
+- (void)removeAlias:(NSString *)anAlias;
+
 @end
 
 NS_ASSUME_NONNULL_END
