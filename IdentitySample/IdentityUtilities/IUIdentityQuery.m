@@ -6,6 +6,7 @@
 //
 
 #import "IUIdentityQuery.h"
+#import "IUIdentity.h"
 
 @interface IUIdentityQuery ()
 
@@ -26,8 +27,20 @@
 
 - (NSArray *)identities
 {
-    NSArray *identities = (NSArray *)CFBridgingRelease(CSIdentityQueryCopyResults(self.identityQuery));
-    return identities;
+    NSArray *result = nil;
+    CFArrayRef identities = CSIdentityQueryCopyResults(self.identityQuery);
+    if (identities)
+    {
+        NSMutableArray *mutableIdentitites = [NSMutableArray array];
+        for (CFIndex i = 0; i < CFArrayGetCount(identities); i++)
+        {
+            CSIdentityRef identity = (CSIdentityRef)CFArrayGetValueAtIndex(identities, i);
+            [mutableIdentitites addObject:[[IUIdentity alloc] initWithIdentity:identity]];
+        }
+        CFRelease(identities);
+        result = mutableIdentitites;
+    }
+    return result;
 }
 
 #pragma mark -

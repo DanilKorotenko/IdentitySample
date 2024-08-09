@@ -17,6 +17,7 @@
 		847A47F1136A3382000EE7AC /* Group.png in Resources */ = {isa = PBXBuildFile; fileRef = 847A47EB136A32F2000EE7AC /* Group.png */; };
 		847A47F4136A3382000EE7AC /* User.png in Resources */ = {isa = PBXBuildFile; fileRef = 847A47EE136A32F2000EE7AC /* User.png */; };
 		DA82E4CF2C6522B900BDF75C /* IUIdentityQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */; };
+		DA82E4D22C66112600BDF75C /* IUIdentity.m in Sources */ = {isa = PBXBuildFile; fileRef = DA82E4D12C66112600BDF75C /* IUIdentity.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,8 @@
 		847A47EE136A32F2000EE7AC /* User.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = User.png; sourceTree = "<group>"; };
 		DA82E4CD2C6522B900BDF75C /* IUIdentityQuery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUIdentityQuery.h; sourceTree = "<group>"; };
 		DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IUIdentityQuery.m; sourceTree = "<group>"; };
+		DA82E4D02C66112600BDF75C /* IUIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IUIdentity.h; sourceTree = "<group>"; };
+		DA82E4D12C66112600BDF75C /* IUIdentity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IUIdentity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +134,8 @@
 			children = (
 				DA82E4CD2C6522B900BDF75C /* IUIdentityQuery.h */,
 				DA82E4CE2C6522B900BDF75C /* IUIdentityQuery.m */,
+				DA82E4D02C66112600BDF75C /* IUIdentity.h */,
+				DA82E4D12C66112600BDF75C /* IUIdentity.m */,
 			);
 			path = IdentityUtilities;
 			sourceTree = "<group>";
@@ -204,6 +209,7 @@
 				847A47BD136A28E5000EE7AC /* main.m in Sources */,
 				DA82E4CF2C6522B900BDF75C /* IUIdentityQuery.m in Sources */,
 				847A47E0136A2B75000EE7AC /* IdentityController.m in Sources */,
+				DA82E4D22C66112600BDF75C /* IUIdentity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

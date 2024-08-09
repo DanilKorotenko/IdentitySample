@@ -49,6 +49,7 @@
 #import <CoreServices/CoreServices.h>
 
 #import "IdentityUtilities/IUIdentityQuery.h"
+#import "IdentityUtilities/IUIdentity.h"
 
 @interface IdentityController ()
 
