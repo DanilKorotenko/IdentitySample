@@ -19,13 +19,12 @@ typedef NS_ENUM(NSUInteger, IUIdentityQueryAuthority)
 
 @interface IUIdentityQuery : NSObject
 
-+ (IUIdentity *)administratorsGroup;
-+ (IUIdentity *)localUserWithFullName:(NSString *)aName;
-
 - (instancetype)initWithIdentityQuery:(CSIdentityQueryRef)anIdentityQuery;
 
 @property(readonly) CSIdentityQueryRef  identityQuery;
 @property(readonly) NSArray             *identities;
+
+- (BOOL)execute:(NSError **)anError;
 
 @end
 

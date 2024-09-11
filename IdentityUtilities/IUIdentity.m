@@ -25,6 +25,49 @@
 @synthesize imageURL;
 @synthesize uuidString;
 
+// returns identity with exact match by FullName
++ (IUIdentity *)identityWithClass:(CSIdentityClass)aClass fullName:(NSString *)aName
+{
+    IUIdentity *result = nil;
+
+    CSIdentityQueryRef iQuery = CSIdentityQueryCreateForName(kCFAllocatorDefault, (__bridge CFStringRef)(aName),
+        kCSIdentityQueryStringEquals, aClass, CSGetLocalIdentityAuthority());
+
+    IUIdentityQuery *query = [[IUIdentityQuery alloc] initWithIdentityQuery:iQuery];
+
+    NSError *error = nil;
+    if ([query execute:&error])
+    {
+        NSArray *identities = query.identities;
+        if (identities.count > 0)
+        {
+            result = [identities objectAtIndex:0];
+        }
+    }
+    else
+    {
+        NSLog(@"CSIdentityQueryRef execute error occured: %@", error);
+    }
+
+    return result;
+}
+
++ (IUIdentity *)administratorsGroup
+{
+    static IUIdentity *result = nil;
+    if (result == nil)
+    {
+        result = [IUIdentity identityWithClass:kCSIdentityClassGroup fullName:@"admin"];
+    }
+    return result;
+}
+
+// returns identity for user with exact match by FullName
++ (IUIdentity *)localUserWithFullName:(NSString *)aName
+{
+    return [IUIdentity identityWithClass:kCSIdentityClassUser fullName:aName];
+}
+
 + (IUIdentity *)newHiddenUserWithFullName:(NSString *)aFullName password:(NSString *)aPassword
 {
     if (aFullName.length == 0 || aPassword.length == 0)
@@ -194,8 +237,7 @@
 // is member of admin group
 - (BOOL)isAdmin
 {
-    Boolean result = CSIdentityIsMemberOfGroup(self.identity,
-        [IUIdentityQuery administratorsGroup].identity);
+    Boolean result = CSIdentityIsMemberOfGroup(self.identity, [IUIdentity administratorsGroup].identity);
     return result ? YES : NO;
 }
 

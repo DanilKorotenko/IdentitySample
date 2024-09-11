@@ -47,49 +47,6 @@
     return [IUIdentityQuery identititesWithClass:kCSIdentityClassGroup];
 }
 
-// returns identity with exact match by FullName
-+ (IUIdentity *)identityWithClass:(CSIdentityClass)aClass fullName:(NSString *)aName
-{
-    IUIdentity *result = nil;
-
-    CSIdentityQueryRef iQuery = CSIdentityQueryCreateForName(kCFAllocatorDefault, (__bridge CFStringRef)(aName),
-        kCSIdentityQueryStringEquals, aClass, CSGetLocalIdentityAuthority());
-
-    IUIdentityQuery *query = [[IUIdentityQuery alloc] initWithIdentityQuery:iQuery];
-
-    NSError *error = nil;
-    if ([query execute:&error])
-    {
-        NSArray *identities = query.identities;
-        if (identities.count > 0)
-        {
-            result = [identities objectAtIndex:0];
-        }
-    }
-    else
-    {
-        NSLog(@"CSIdentityQueryRef execute error occured: %@", error);
-    }
-
-    return result;
-}
-
-// returns identity for user with exact match by FullName
-+ (IUIdentity *)localUserWithFullName:(NSString *)aName
-{
-    return [IUIdentityQuery identityWithClass:kCSIdentityClassUser fullName:aName];
-}
-
-+ (IUIdentity *)administratorsGroup
-{
-    static IUIdentity *result = nil;
-    if (result == nil)
-    {
-        result = [IUIdentityQuery identityWithClass:kCSIdentityClassGroup fullName:@"admin"];
-    }
-    return result;
-}
-
 #pragma mark -
 
 - (instancetype)initWithIdentityQuery:(CSIdentityQueryRef)anIdentityQuery
