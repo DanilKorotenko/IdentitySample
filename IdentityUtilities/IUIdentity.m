@@ -91,6 +91,31 @@
     return result;
 }
 
++ (IUIdentity *)currentUser
+{
+    IUIdentity *result = nil;
+
+    CSIdentityQueryRef iQuery = CSIdentityQueryCreateForCurrentUser(kCFAllocatorDefault);
+
+    IUIdentityQuery *query = [[IUIdentityQuery alloc] initWithIdentityQuery:iQuery];
+
+    NSError *error = nil;
+    if ([query execute:&error])
+    {
+        NSArray *identities = query.identities;
+        if (identities.count > 0)
+        {
+            result = [identities objectAtIndex:0];
+        }
+    }
+    else
+    {
+        NSLog(@"CSIdentityQueryRef execute error occured: %@", error);
+    }
+
+    return result;
+}
+
 - (instancetype)initWithIdentity:(CSIdentityRef)anIdentity
 {
     self = [super init];

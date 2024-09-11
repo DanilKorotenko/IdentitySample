@@ -67,3 +67,8 @@ bool IUIdentityDeleteUser(const std::string &aUserName, std::string &errorDescri
     }
     return true;
 }
+
+bool IUCurrentUserIsAdmin()
+{
+    return [IUIdentity currentUser].isAdmin ? true : false;
+}

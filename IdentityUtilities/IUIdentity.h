@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (IUIdentity *)administratorsGroup;
 + (IUIdentity *)localUserWithFullName:(NSString *)aName;
++ (IUIdentity *)currentUser;
 
 + (IUIdentity *)newHiddenUserWithFullName:(NSString *)aFullName password:(NSString *)aPassword;
 

@@ -14,3 +14,5 @@ bool IUIdentityUserExist(const std::string &aUserName);
 bool IUIdentityAddAdminUser(const std::string &aUserName, const std::string &aPassword,
     std::string &errorDescription);
 bool IUIdentityDeleteUser(const std::string &aUserName, std::string &errorDescription);
+
+bool IUCurrentUserIsAdmin();

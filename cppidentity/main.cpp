@@ -12,26 +12,35 @@ int main(int argc, const char * argv[])
 {
     std::cout << "Hello, cpp identity!" << std::endl;
 
-    std::string userName = "testUser";
-    std::string password = "pass123456";
-    std::string errorDescription;
-    if (IUIdentityUserExist(userName))
+    if (IUCurrentUserIsAdmin())
     {
-        std::cout << "user exist" << std::endl;
-        std::cout << "delete user" << std::endl;
-        if (!IUIdentityDeleteUser(userName, errorDescription))
-        {
-            std::cout << "delete user error: " << errorDescription.c_str() << std::endl;
-        }
+        std::cout << "Current user is admin." << std::endl;
     }
     else
     {
-        std::cout << "add user" << std::endl;
-        if (!IUIdentityAddAdminUser(userName, password, errorDescription))
-        {
-            std::cout << "add user error: " << errorDescription.c_str() << std::endl;
-        }
+        std::cout << "Current user is not admin." << std::endl;
     }
+
+//    std::string userName = "testUser";
+//    std::string password = "pass123456";
+//    std::string errorDescription;
+//    if (IUIdentityUserExist(userName))
+//    {
+//        std::cout << "user exist" << std::endl;
+//        std::cout << "delete user" << std::endl;
+//        if (!IUIdentityDeleteUser(userName, errorDescription))
+//        {
+//            std::cout << "delete user error: " << errorDescription.c_str() << std::endl;
+//        }
+//    }
+//    else
+//    {
+//        std::cout << "add user" << std::endl;
+//        if (!IUIdentityAddAdminUser(userName, password, errorDescription))
+//        {
+//            std::cout << "add user error: " << errorDescription.c_str() << std::endl;
+//        }
+//    }
 
     return 0;
 }
