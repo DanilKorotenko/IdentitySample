@@ -6,6 +6,7 @@
 //
 
 #import "IUIdentity.h"
+#import "IUIdentityQuery/IUIdentityQuery.h"
 
 @interface IUIdentity ()
 
@@ -165,6 +166,11 @@
     return uuidString;
 }
 
+- (BOOL)isGroup
+{
+    return self.identityClass == kCSIdentityClassGroup;
+}
+
 - (BOOL)isEnabled
 {
     return (BOOL)CSIdentityIsEnabled(self.identity);
@@ -183,6 +189,19 @@
 - (CSIdentityClass)identityClass
 {
     return CSIdentityGetClass(self.identity);
+}
+
+// is member of admin group
+- (BOOL)isAdmin
+{
+    Boolean result = CSIdentityIsMemberOfGroup(self.identity,
+        [IUIdentityQuery administratorsGroup].identity);
+    return result ? YES : NO;
+}
+
+- (CSIdentityQueryRef)groupMemebershipQuery
+{
+    return CSIdentityCreateGroupMembershipQuery(kCFAllocatorDefault, self.identity);
 }
 
 #pragma mark -
@@ -222,6 +241,8 @@
 {
     CSIdentityRemoveAlias(self.identity, (__bridge CFStringRef)(anAlias));
 }
+
+#pragma mark group class
 
 - (void)addMember:(IUIdentity *)anIdentity
 {

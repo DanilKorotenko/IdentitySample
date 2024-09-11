@@ -23,9 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(readonly)     NSString        *imageDataType;
 @property(readwrite)    NSURL           *imageURL;
 @property(readonly)     NSString        *uuidString;
+@property(readonly)     BOOL            isGroup;
 @property(readwrite)    BOOL            isEnabled;
 @property(readonly)     NSInteger       posixID;
 @property(readonly)     CSIdentityClass identityClass;
+
+@property(readonly)     BOOL isAdmin; // is member of admin group
+
+@property(readonly)     CSIdentityQueryRef groupMemebershipQuery;
 
 - (void)deleteIdentity;
 - (BOOL)commit:(NSError **)anError;
@@ -34,7 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addAlias:(NSString *)anAlias;
 - (void)removeAlias:(NSString *)anAlias;
 
-// only applicable if identity is group
+#pragma mark group class
+
 - (void)addMember:(IUIdentity *)anIdentity;
 
 @end

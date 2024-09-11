@@ -5,7 +5,7 @@
 //  Created by Danil Korotenko on 8/9/24.
 //
 
-#import "IUIdentityQuery.h"
+#import "IUIdentityQuery/IUIdentityQuery.h"
 
 #include <string>
 
