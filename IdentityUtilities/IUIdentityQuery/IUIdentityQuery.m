@@ -6,6 +6,7 @@
 //
 
 #import "IUIdentityQuery.h"
+#import "../IUIdentity.h"
 
 @interface IUIdentityQuery ()
 

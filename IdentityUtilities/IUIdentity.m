@@ -266,7 +266,7 @@
     return result ? YES : NO;
 }
 
-- (CSIdentityQueryRef)groupMemebershipQuery
+- (CSIdentityQueryRef)groupMembershipQuery
 {
     return CSIdentityCreateGroupMembershipQuery(kCFAllocatorDefault, self.identity);
 }

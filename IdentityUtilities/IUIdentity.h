@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(readonly)     BOOL isAdmin; // is member of admin group
 
-@property(readonly)     CSIdentityQueryRef groupMemebershipQuery;
+@property(readonly)     CSIdentityQueryRef groupMembershipQuery;
 
 - (void)deleteIdentity;
 - (BOOL)commit:(NSError **)anError;
