@@ -20,7 +20,7 @@
 {
     NSArray *result = nil;
 
-    CSIdentityQueryRef iQuery = CSIdentityQueryCreate(kCFAllocatorDefault, kCSIdentityClassUser,
+    CSIdentityQueryRef iQuery = CSIdentityQueryCreate(kCFAllocatorDefault, aClass,
         CSGetLocalIdentityAuthority());
 
     IUIdentityQuery *query = [[IUIdentityQuery alloc] initWithIdentityQuery:iQuery];
@@ -90,7 +90,7 @@
 - (BOOL)execute:(NSError **)anError
 {
     CFErrorRef error = NULL;
-    Boolean result = CSIdentityQueryExecute(self.identityQuery, kCSIdentityQueryIncludeHiddenIdentities, &error);
+    Boolean result = CSIdentityQueryExecute(self.identityQuery, 0, &error);
     if (anError && error)
     {
         *anError = (__bridge NSError *)(error);

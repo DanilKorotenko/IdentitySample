@@ -6,6 +6,7 @@
 //
 
 #import "IUIdentityQuery/IUIdentityQuery.h"
+#import "IUIdentity.h"
 
 #include <string>
 

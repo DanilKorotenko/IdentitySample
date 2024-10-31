@@ -18,6 +18,8 @@ typedef NS_ENUM(NSUInteger, IUIdentityQueryAuthority)
 
 @interface IUIdentityQuery : NSObject
 
++ (NSArray *)localUsers;
+
 - (instancetype)initWithIdentityQuery:(CSIdentityQueryRef)anIdentityQuery;
 
 @property(readonly) CSIdentityQueryRef  identityQuery;

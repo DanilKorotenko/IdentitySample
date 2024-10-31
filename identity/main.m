@@ -6,11 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "../IdentityUtilities/IUIdentityQuery.h"
+#import "../IdentityUtilities/IUIdentityQuery/IUIdentityQuery.h"
+#import "../IdentityUtilities/IUIdentity.h"
 
 void addDeleteUser(void)
 {
-    IUIdentity *testUser = [IUIdentityQuery localUserWithFullName:@"testUser"];
+    IUIdentity *testUser = [IUIdentity localUserWithFullName:@"testUser"];
     if (testUser)
     {
         NSLog(@"testUser exist: %@", testUser);
@@ -40,7 +41,7 @@ void addDeleteUser(void)
             NSLog(@"Error occured on commit identity: %@", error);
         }
 
-        IUIdentity *administrators = [IUIdentityQuery administratorsGroup];
+        IUIdentity *administrators = [IUIdentity administratorsGroup];
         NSLog(@"administrators: %@", administrators);
 
         NSLog(@"add testUser to administrators group");
@@ -63,10 +64,10 @@ int main(int argc, const char * argv[])
     {
         NSLog(@"Hello, identity!");
 
-//        NSLog(@"local users:");
-//        NSLog(@"%@", [IUIdentityQuery localUsers]);
+        NSLog(@"local users:");
+        NSLog(@"%@", [IUIdentityQuery localUsers]);
 
-        addDeleteUser();
+//        addDeleteUser();
 
 //        NSLog(@"local groups:");
 //        NSLog(@"%@", [IUIdentityQuery localGroups]);
